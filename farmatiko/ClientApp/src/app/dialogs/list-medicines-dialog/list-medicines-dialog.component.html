@@ -1,0 +1,36 @@
+<div class="wrapper">
+    <div class="header">
+    <h2>Листа на постоечки лекови</h2>
+  <mat-form-field>
+    <input matInput (keyup)="applyFilterMedicines($event.target.value)" placeholder="Пронајди лек">
+  </mat-form-field>
+    </div>
+  <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="filteredListMedicines">
+      <thead>
+        <tr>
+      	  <th>Име</th>
+      	  <th>Јачина</th>
+      	  <th>Форма</th>
+      	  <th>Начин на издавање</th>
+      	  <th>Производител</th>
+      	  <th>Цена</th>
+          <th>Пакување</th>
+          <th>Додај</th>
+      	</tr>
+      </thead>
+      <tbody>
+      	<tr *ngFor="let medicine of filteredListMedicines">
+      	  <td>{{ medicine.name }}</td>
+      	  <td>{{ medicine.strength }}</td>
+      	  <td>{{ medicine.form }}</td>
+      	  <td>{{ medicine.wayOfIssuing }}</td>
+      	  <td>{{ medicine.manufacturer }}</td>
+      	  <td>{{ medicine.price }}</td>
+          <td>{{ medicine.packaging }}</td>
+          <td><mat-checkbox (click)="selectMedicine(medicine)"></mat-checkbox></td>
+      	</tr>
+    </tbody>
+  </table>
+</div>
+<button type="reset" class="btn btn-default" (click)="close()">Cancel</button>&nbsp;&nbsp;
+<button type="submit" class="btn btn-success" (click)="save()">Додај ги лековите</button>

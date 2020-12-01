@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CS1705: Assembly 'FarmatikoData' with identity 'FarmatikoData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null' uses 'Microsoft.EntityFrameworkCore, Version=3.1.6.0, Culture=neutral, PublicKeyToken=adb9793829ddae60' which has a higher version than referenced assembly 'Microsoft.EntityFrameworkCore' with identity 'Microsoft.EntityFrameworkCore, Version=3.1.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60'
+dotnet_diagnostic.CS1705.severity = none

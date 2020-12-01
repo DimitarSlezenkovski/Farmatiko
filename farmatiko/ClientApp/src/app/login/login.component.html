@@ -1,0 +1,24 @@
+<div class="wrapper">
+<mat-card>
+<mat-card-header><h2>Најава</h2></mat-card-header>
+<mat-card-content>
+<form [formGroup]="loginForm" novalidate>
+  <div class="example-container">
+    <mat-form-field>
+      <input matInput placeholder="Email" [(ngModel)]="this.username" formControlName="username">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput type="password" placeholder="Password" [(ngModel)]="this.password" formControlName="password">    
+    </mat-form-field>
+
+    <button [disabled]="!loginForm.valid" mat-raised-button color="primary" (click)="loginPharmacyHead()" mat-button>Најави се</button>
+
+    <div class="checkbox mb-3 text-danger" *ngIf="loginError">
+      Login failed. Please try again.
+    </div>
+  </div>
+</form>
+</mat-card-content>
+</mat-card>
+</div>

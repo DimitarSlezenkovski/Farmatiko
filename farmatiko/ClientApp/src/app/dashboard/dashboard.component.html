@@ -1,0 +1,138 @@
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+      <div class="container">
+        <a class="navbar-brand" [routerLink]="['/dashboard']"><img src="../../assets/logo.png"></a>
+        <button class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target=".navbar-collapse"
+                aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+          <ul class="navbar-nav flex-grow">
+            <li>Logged as <p *ngIf="head">{{head.Name}}</p> </li>
+          </ul>
+        </div>
+        
+        <button mat-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item [routerLink]="['/']"><mat-icon>directions</mat-icon>Почетна</button>
+          <button mat-menu-item (click)="logout()"><mat-icon>exit_to_app</mat-icon>Одјави се</button>
+        </mat-menu>
+      </div>
+    </nav>
+</header>
+
+<mat-tab-group dynamicHeight mat-stretch-tabs>
+  <mat-tab class="tab" label="Мои аптеки"> 
+  <div class="wrapper">
+    <div class="header">
+    <h2>Мои аптеки</h2>
+    <p *ngIf="!head"><em>Loading...</em></p>
+    </div>
+    <table class='table table-striped table-bordered table-sm' cellspacing="0" width="100%" aria-labelledby="tableLabel" *ngIf="head">
+      <thead>
+        <tr>
+          <th>Име</th>
+          <th>Локација</th>
+          <th>Адреса</th>
+          <th>Работи 24/7</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pharmacies of head.Pharmacy">
+          <td>{{pharmacies.name}}</td>
+          <td>{{pharmacies.location}}</td>
+          <td>{{pharmacies.address}}</td>
+          <td>{{pharmacies.workAllTime}}</td>
+          <td><a (click)="openEditPharmacyDialog(pharmacies)">Edit</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </mat-tab>
+  <mat-tab class="tab" label="Сите аптеки"> 
+  <div class="wrapper">
+    <div class="header">
+    <h2>Сите аптеки</h2>
+    <mat-form-field>
+      <input matInput (keyup)="applyFilterPharmacies($event.target.value)" placeholder="Пронајди аптека">
+    </mat-form-field>
+  </div>
+    <table class='table table-striped table-bordered table-sm' cellspacing="0" width="100%" aria-labelledby="tableLabel" *ngIf="pharmacies">
+      <thead>
+        <tr>
+      	  <th>Име</th>
+      	  <th>Локација</th>
+      	  <th>Адреса</th>
+      	  <th>Работи 27/7?</th>
+      	</tr>
+      </thead>
+      <tbody>
+      	<tr *ngFor="let pharmacy of pharmacies">
+      	  <td><a (click)="openPharmacyDialog(pharmacy)">{{ pharmacy.name }}</a></td>
+      	  <td>{{ pharmacy.location }}</td>
+      	  <td>{{ pharmacy.address }}</td>
+          <td>{{ pharmacy.workAllTime }}</td>
+          <td><a (click)="claimPharmacy(pharmacy)">Claim</a></td>
+      	</tr>
+    </tbody>
+  </table>
+    </div>
+    </mat-tab>
+  </mat-tab-group>
+
+<div class="wrapper">
+    <div class="header">
+    <h2>Достапни лекови</h2>
+    <div class="btns">
+      <button mat-raised-button color="primary" (click)="saveDeletedMedicines()" [disabled]="editedMedicine==false">Зачувај ги промените</button>
+      <button mat-raised-button color="accent" aria-label="Add medicine" (click)="addMedicine()">Додај нов лек</button>
+      <button mat-raised-button color="accent" aria-label="Add medicine" (click)="addMedicinesFromList()">Додај постоечки лекови</button>
+    </div><br/>
+    <mat-slide-toggle (click)="switchEditMedicineMode()">Edit mode</mat-slide-toggle>
+    
+    <mat-form-field *ngIf="!medicinesEditMode">
+      <input matInput (keyup)="applyFilterMedicines($event.target.value)" placeholder="Пронајди лек">
+    </mat-form-field>
+    </div>
+      <table class='table table-striped table-bordered table-sm' cellspacing="0" width="100%" aria-labelledby="tableLabel" *ngIf="head">
+        <thead>
+          <tr>
+            <th>Име</th>
+            <th>Јачина</th>
+            <th>Форма</th>
+            <th>Начин на издавање</th>
+            <th>Производител</th>
+            <th>Цена</th>
+            <th>Пакување</th>
+            <th>Контроли</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let medicine of filteredMedicines">
+            <td *ngIf="!medicinesEditMode"><a (click)="openMedicineDialog(medicine)">{{ medicine.name }}</a></td>
+            <td *ngIf="medicinesEditMode"><mat-form-field appearance="fill"><input matInput [(ngModel)]="medicine.name" name="medname"></mat-form-field></td>
+            <td *ngIf="!medicinesEditMode">{{ medicine.strength }}</td>
+            <td *ngIf="medicinesEditMode"><mat-form-field appearance="fill"><input matInput [(ngModel)]="medicine.strength" name="medstr"></mat-form-field></td>
+            <td *ngIf="!medicinesEditMode">{{ medicine.form }}</td>
+            <td *ngIf="medicinesEditMode"><mat-form-field appearance="fill"><input matInput [(ngModel)]="medicine.form" name="medform"></mat-form-field></td>
+            <td *ngIf="!medicinesEditMode">{{ medicine.wayOfIssuing }}</td>
+            <td *ngIf="medicinesEditMode"><mat-form-field appearance="fill"><input matInput [(ngModel)]="medicine.wayOfIssuing" name="medwayOfIssuing"></mat-form-field></td>
+            <td *ngIf="!medicinesEditMode">{{ medicine.manufacturer }}</td>
+            <td *ngIf="medicinesEditMode"><mat-form-field appearance="fill"><input matInput [(ngModel)]="medicine.manufacturer" name="medmanufacturer"></mat-form-field></td>
+            <td *ngIf="!medicinesEditMode">{{ medicine.price }}</td>
+            <td *ngIf="medicinesEditMode"><mat-form-field appearance="fill"><input matInput [(ngModel)]="medicine.price" name="medprice"></mat-form-field></td>
+            <td *ngIf="!medicinesEditMode">{{ medicine.packaging }}</td>
+            <td *ngIf="medicinesEditMode"><mat-form-field appearance="fill"><input matInput [(ngModel)]="medicine.packaging" name="medpackaging"></mat-form-field></td>
+            <td>
+              <button mat-mini-fab color="warn" aria-label="Delete medicine" (click)="deleteMedicine(medicine)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+</div>

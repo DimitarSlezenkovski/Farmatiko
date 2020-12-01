@@ -1,0 +1,41 @@
+a.navbar-brand img {
+    width: 200px;
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    min-width: 300px;
+}
+  
+.mat-table {
+    overflow: auto;
+    max-height: 500px;
+}
+  
+.header {
+    padding: 8px 24px 0;
+}
+  
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+h2 {
+    padding: 1em 0;
+}
+
+.btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.btns button {
+    margin: 0.5em 0.5em 0.5em 0;
+}

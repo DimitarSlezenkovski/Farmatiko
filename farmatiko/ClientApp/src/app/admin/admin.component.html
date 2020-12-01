@@ -1,0 +1,83 @@
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+      <div class="container">
+        <a class="navbar-brand" [routerLink]="['/']"><img src="../../assets/logo.png"></a>
+        <button class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target=".navbar-collapse"
+                aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+          <ul class="navbar-nav flex-grow">
+            <li>Administration panel:</li> 
+            <li>&nbsp;Logged as <p *ngIf="head">{{adminHead.Name}}</p> </li>
+            <li (click)="logout()" class="btn btn-link"><a>Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+</header>
+<mat-tab-group mat-stretch-tabs dynamicHeight>
+      <mat-tab label="Claiming requests"> 
+        <div class="wrapper">
+          <div>
+            <table class='table table-striped table-bordered table-sm' cellspacing="0" width="100%" aria-labelledby="tableLabel" *ngIf="requests">
+              <thead>
+                <tr>
+                  <th>Account</th>
+                  <th>Pharmacy</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let request of requests">
+                  <td>{{request.PharmacyHead.Name}} | {{request.PharmacyHead.Email}}</td>
+                  <td><a (click)="openPharmacyDialog(request.Pharmacy)">{{request.Pharmacy.name}}</a></td>
+                  <td><a (click)="approveRequest(request)">Approve</a> | <a (click)="rejectRequest(request)">Reject</a></td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Manage accounts">
+        <div class="wrapper">
+          <div>
+            <table class='table table-striped table-bordered table-sm' cellspacing="0" width="100%" aria-labelledby="tableLabel" *ngIf="heads">
+              <thead>
+                <tr>
+                  <th>Account</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let head of heads">
+                  <td><a (click)="openPharmacyHeadDialog(head)">{{head.Name}}</a> | {{head.Email}}</td>
+                  <td><a (click)="deletePharmacyHead(head)">Delete</a> | <a (click)="openEditPharmacyHeadDialog(head)">Change</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+        <mat-tab label="Create new account">
+          <h2 *ngIf="!this.head">Loading form...</h2>
+          <div class="createform" *ngIf="this.head">
+          <mat-form-field appearance="fill">
+            <mat-label>Name</mat-label>
+            <input matInput [(ngModel)]="this.head.Name">
+          </mat-form-field><br>
+          <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input matInput [(ngModel)]="this.head.Email">
+          </mat-form-field><br>
+          <mat-form-field appearance="fill">
+            <mat-label>Password</mat-label>
+            <input matInput [(ngModel)]="this.head.Passwd">
+          </mat-form-field><br>
+            <button (click)="createHead()" mat-raised-button color="primary">Create</button>
+          </div>
+        </mat-tab>
+</mat-tab-group>

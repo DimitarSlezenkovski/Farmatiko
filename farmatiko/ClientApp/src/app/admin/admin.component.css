@@ -1,0 +1,17 @@
+a.navbar-brand img {
+    width: 200px;
+}
+
+.createform {
+    text-align: center;
+    padding: 20px;
+}
+
+mat-form-field {
+    width: 30vh;
+}
+
+h2 {
+    text-align: center;
+    padding: 50px;
+}

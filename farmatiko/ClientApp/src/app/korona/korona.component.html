@@ -1,0 +1,64 @@
+<app-nav-menu></app-nav-menu>
+
+<div class="container" *ngIf="korona">
+  <div class="row">
+    <br />
+    <div class="col text-center">
+      <h2>{{korona.name}}</h2>
+      <p>статистика</p>
+    </div>
+  </div>
+  <div class="row text-center pads">
+    <div class="col">
+      <div class="counter" *ngIf="korona">
+        <i class="fa fa-code fa-2x">{{korona.totalMK}}</i>
+        <h2 class="timer count-title count-number"></h2>
+        <p class="count-text ">Вкупно случаи во земјата</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="counter" *ngIf="korona">
+        <i class="fa fa-coffee fa-2x">{{korona.activeMK}}</i>
+        <h2 class="timer count-title count-number"></h2>
+        <p class="count-text ">Активни случаи во земјата</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="counter" *ngIf="korona">
+        <i class="fa fa-lightbulb-o fa-2x">{{korona.deathsMK}}</i>
+        <h2 class="timer count-title count-number"></h2>
+        <p class="count-text ">Смртни случаи во земјата</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="counter" *ngIf="korona">
+        <i class="fa fa-bug fa-2x">{{korona.newMK}}</i>
+        <h2 class="timer count-title count-number"></h2>
+        <p class="count-text ">Нови случаи во земјата</p>
+      </div>
+    </div>
+  </div>
+  <div class="row text-center pads">
+    <div class="col">
+      <div class="counter" *ngIf="korona">
+        <i class="fa fa-bug fa-2x">{{korona.totalGlobal}}</i>
+        <h2 class="timer count-title count-number"></h2>
+        <p class="count-text ">Вкупно случаи глобално</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="counter" *ngIf="korona">
+        <i class="fa fa-bug fa-2x">{{korona.activeGlobal}}</i>
+        <h2 class="timer count-title count-number"></h2>
+        <p class="count-text ">Активни случаи глобално</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="counter" *ngIf="korona">
+        <i class="fa fa-bug fa-2x">{{korona.deathsGlobal}}</i>
+        <h2 class="timer count-title count-number"></h2>
+        <p class="count-text ">Смртни случаи глобално</p>
+      </div>
+    </div>
+    </div>
+</div>

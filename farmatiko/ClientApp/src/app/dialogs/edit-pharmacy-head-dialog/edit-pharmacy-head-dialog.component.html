@@ -1,0 +1,28 @@
+
+  <form (ngSubmit)="save()" #headForm="ngForm" class="editForm" novalidate>
+    <div class="form-group">
+      <label>ИД</label>
+      <input type="text" class="form-control" name="id" [(ngModel)]="head.id" #id="ngModel" required>
+      <div class="alert alert-danger">ID is required</div>
+    </div>
+    <div class="form-group">
+      <label>Име</label>
+      <input type="text" class="form-control" name="name" [(ngModel)]="head.Name" #name="ngModel" required>
+      <div class="alert alert-danger">Name is required</div>
+    </div>
+    <div class="form-group">
+      <label>Е-пошта</label>
+      <input type="text" class="form-control" name="email" [(ngModel)]="head.Email" #email="ngModel" required />
+      <div class="alert alert-danger" [hidden]="head.Email">Email is required</div>
+    </div>
+    <div class="form-group">
+      <label>Лозинка</label>
+      <input type="text" class="form-control" name="passwd" [(ngModel)]="head.Passwd" #passwd="ngModel" required />
+      <div class="alert alert-danger" [hidden]="head.Passwd">Password is required</div>
+    </div>
+    <br />
+    <div class="pull-right">
+        <button class="btn btn-default" (click)="close()">Cancel</button>&nbsp;&nbsp;
+        <button type="submit" class="btn btn-success" [disabled]="!headForm.valid">Save</button>
+      </div>
+  </form>

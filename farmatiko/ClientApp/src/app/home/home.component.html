@@ -1,0 +1,66 @@
+<app-nav-menu></app-nav-menu>
+
+<mat-tab-group dynamicHeight mat-stretch-tabs>
+  <mat-tab class="tab" label="Лекови">
+  <div class="wrapper">
+    <div class="header">
+    <h2>Лекови</h2>
+  <mat-form-field>
+    <input matInput (keyup)="applyFilterMedicines($event.target.value)" placeholder="Пронајди лек">
+  </mat-form-field>
+    </div>
+  <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="true">
+      <thead>
+        <tr>
+      	  <th>Име</th>
+      	  <th>Јачина</th>
+      	  <th>Форма</th>
+      	  <th>Начин на издавање</th>
+      	  <th>Производител</th>
+      	  <th>Цена</th>
+      	  <th>Пакување</th>
+      	</tr>
+      </thead>
+      <tbody>
+      	<tr *ngFor="let medicine of filteredMedicines">
+      	  <td><a (click)="openMedicineDialog(medicine)">{{ medicine.name }}</a></td>
+      	  <td>{{ medicine.strength }}</td>
+      	  <td>{{ medicine.form }}</td>
+      	  <td>{{ medicine.wayOfIssuing }}</td>
+      	  <td>{{ medicine.manufacturer }}</td>
+      	  <td>{{ medicine.price }}</td>
+      	  <td>{{ medicine.packaging }}</td>
+      	</tr>
+    </tbody>
+  </table>
+  </div>
+  </mat-tab>
+  <mat-tab class="tab" label="Аптеки">
+  <div class="wrapper">
+    <div class="header">
+    <h2>Аптеки</h2>
+    <mat-form-field>
+      <input matInput (keyup)="applyFilterPharmacies($event.target.value)" placeholder="Пронајди аптека">
+    </mat-form-field>
+    </div>
+    <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="true">
+      <thead>
+        <tr>
+      	  <th>Име</th>
+      	  <th>Локација</th>
+      	  <th>Адреса</th>
+      	  <th>Работи 27/7?</th>
+      	</tr>
+      </thead>
+      <tbody>
+      	<tr *ngFor="let pharmacy of filteredPharmacies">
+      	  <td><a (click)="openPharmacyDialog(pharmacy)">{{ pharmacy.name }}</a></td>
+      	  <td>{{ pharmacy.location }}</td>
+      	  <td>{{ pharmacy.address }}</td>
+      	  <td>{{ pharmacy.workAllTime }}</td>
+      	</tr>
+    </tbody>
+  </table>
+    </div>
+    </mat-tab>
+  </mat-tab-group>

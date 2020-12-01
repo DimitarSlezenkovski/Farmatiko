@@ -1,0 +1,34 @@
+<div class="wrapper">
+<form [formGroup]="forma" (ngSubmit)="save()">
+  <mat-form-field appearance="fill">
+      <mat-label>Име</mat-label>
+      <input matInput type="text" formControlName="name" required>
+  </mat-form-field><br/>
+  <mat-form-field appearance="fill">
+      <mat-label>Јачина</mat-label>
+      <input matInput type="text" formControlName="strength" required>
+  </mat-form-field><br/>
+  <mat-form-field appearance="fill">
+      <mat-label>Форма</mat-label>
+      <input matInput type="text" formControlName="form" required>
+  </mat-form-field><br/>
+  <mat-form-field appearance="fill">
+    <mat-label>Начин на издавање</mat-label>
+    <input matInput type="text" formControlName="wayOfIssuing" required>
+  </mat-form-field><br/>
+  <mat-form-field appearance="fill">
+    <mat-label>Производител</mat-label>
+    <input matInput type="text" formControlName="manufacturer" required>
+  </mat-form-field><br/>
+  <mat-form-field appearance="fill">
+      <mat-label>Цена</mat-label>
+      <input matInput type="text" formControlName="price" required>
+  </mat-form-field><br/>
+  <mat-form-field appearance="fill">
+      <mat-label>Пакување</mat-label>
+      <input matInput type="text" formControlName="packaging" required>
+  </mat-form-field><br/>
+  <button type="reset" class="btn btn-default" (click)="close()">Cancel</button>&nbsp;&nbsp;
+  <button type="submit" class="btn btn-success" [disabled]="!forma.valid">Save</button>
+</form>
+</div>

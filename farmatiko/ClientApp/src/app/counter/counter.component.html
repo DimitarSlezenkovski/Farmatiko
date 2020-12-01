@@ -1,0 +1,65 @@
+
+<app-nav-menu></app-nav-menu>
+
+<mat-tab-group dynamicHeight mat-stretch-tabs>
+  <mat-tab class="tab" label="Здравствени установи">
+  <div class="wrapper">
+    <div class="header">
+    <h2>Здравствени установи</h2>
+  <mat-form-field>
+    <input matInput (keyup)="applyFilterFacilities($event.target.value)" placeholder="Пронајди установа">
+  </mat-form-field>
+    </div>    
+    <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="true">
+      <thead>
+        <tr>
+      	  <th>Име</th>
+      	  <th>Општина</th>
+      	  <th>Адреса</th>
+      	  <th>Тип</th>
+      	  <th>Е-пошта</th>
+      	  <th>Телефон</th>
+      	</tr>
+      </thead>
+      <tbody>
+      	<tr *ngFor="let facility of filteredFacilities">
+      	  <td><a (click)="openFacilityDialog(facility)">{{ facility.name }}</a></td>
+      	  <td>{{ facility.municipality }}</td>
+      	  <td>{{ facility.address }}</td>
+      	  <td>{{ facility.type }}</td>
+      	  <td>{{ facility.email }}</td>
+      	  <td>{{ facility.phone }}</td>
+      	</tr>
+    </tbody>
+  </table>
+  </div>
+  </mat-tab>
+  <mat-tab class="tab" label="Здравствени работници">
+  <div class="wrapper">
+    <div class="header">
+    <h2>Здравствени работници</h2>
+    <mat-form-field>
+      <input matInput (keyup)="applyFilterWorkers($event.target.value)" placeholder="Пронајди работник">
+    </mat-form-field>
+    </div>
+    <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="true">
+      <thead>
+        <tr>
+      	  <th>Име</th>
+      	  <th>Гранка</th>
+      	  <th>Установа</th>
+      	  <th>Назив</th>
+      	</tr>
+      </thead>
+      <tbody>
+      	<tr *ngFor="let worker of filteredWorkers">
+      	  <td><a (click)="openWorkerDialog(worker)">{{ worker.name }}</a></td>
+      	  <td>{{ worker.branch }}</td>
+      	  <td>{{ worker.facility }}</td>
+      	  <td>{{ worker.title }}</td>
+      	</tr>
+    </tbody>
+  </table>
+    </div>
+    </mat-tab>
+  </mat-tab-group>
