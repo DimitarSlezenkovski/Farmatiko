@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using FarmatikoData.DTOs;
 using FarmatikoData.Models;
 using FarmatikoServices.FarmatikoServiceInterfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -18,15 +19,7 @@ namespace Farmatiko.Controllers
         }
 
         //GET
-        /*
-        [HttpGet]
-        [Route("api/pharmacyhead")]
-        public async Task<IEnumerable<PharmacyHead>> GetPharmacyHeadInfo()
-        {
-            var PHeads = await _PHService.GetPharmacyHeadInfo();
-            return PHeads;
-        }*/
-
+        
         [HttpGet]
         [Route("api/pharmacyhead/{Id}")]
         public async Task<PharmacyHead> GetPharmacyHeadById([FromRoute] int Id)
@@ -35,26 +28,13 @@ namespace Farmatiko.Controllers
             return Phead;
         }
         //POST
-        /*
-                [HttpPost]
-                [Route("api/pharmacyhead/add")]
-                public async Task<IActionResult> AddPharmacyHead([FromBody] PharmacyHead pharmacyHead)
-                {
-                    bool Success = await _PHService.Add(pharmacyHead);
-                    return Ok(Success);
-                }*/
-
-        /*[HttpPost]
-        [Route("api/pharmacyhead/login")]
-        public async Task<int> Login([FromBody]PharmacyHead pharmacyHead)
-        {
-            return await _PHService.Login(pharmacyHead); 
-        }*/
+        
         [HttpPut]
         [Route("api/pharmacyhead/update")]
-        public async Task UpdatePharmacyHead([FromBody] PharmacyHead pharmacyHead)
+        public async Task<IActionResult> UpdatePharmacyHead([FromBody] PharmacyHeadDto pharmacyHead)
         {
             await _PHService.UpdatePharmacyHead(pharmacyHead);
+            return Ok();
         }
         [HttpPost]
         [Route("api/pharmacyhead/requests")]

@@ -23,15 +23,17 @@ namespace FarmatikoData.FarmatikoRepo
 
         public async Task<IEnumerable<PharmacyHead>> GetPharmacyHeadInfo()
         {
-            var PHeadInfo = await _context.PharmacyHeads.Take(10).Where(x => x.DeletedOn == null)
+            var PHeadInfo = await _context.PharmacyHeads.Take(10)
+                .Where(x => x.DeletedOn == null)
                 .Select(x => new PharmacyHead
                 {
                     Id = x.Id,
                     Name = x.Name,
                     Email = x.Email,
                     Password = x.Password,
-                    MedicineList = x.MedicineList,
-                    PharmaciesList = x.PharmaciesList
+                    Pharmacies = x.Pharmacies,
+                    Medicines = x.Medicines
+
                 }).ToListAsync();
             return PHeadInfo;
         }
@@ -40,16 +42,22 @@ namespace FarmatikoData.FarmatikoRepo
         {
             var Phead = await _context.PharmacyHeads.Where(x => x.Email == pharmacyHead.Email).FirstOrDefaultAsync();
             var EditedPHead = await _context.PharmacyHeads.AsNoTracking<PharmacyHead>().Where(x => x.Email == pharmacyHead.Email).FirstOrDefaultAsync();
-            EditedPHead.Email = pharmacyHead.Email;
-            EditedPHead.Name = pharmacyHead.Name;
-            EditedPHead.Password = pharmacyHead.Password;
-            /*if (pharmacyHead.MedicineList.Count() == 0)
-                pharmacyHead.MedicineList = null;*/
-            EditedPHead.MedicineList = pharmacyHead.MedicineList;
-            EditedPHead.PharmaciesList = pharmacyHead.PharmaciesList;
-            EditedPHead.PHMedicineList = pharmacyHead.PHMedicineList;
-            //_context.Entry<PharmacyHead>(Phead).State = EntityState.Detached;
-            //Phead = EditedPHead;
+
+            if (!EditedPHead.Email.Equals(pharmacyHead.Email))
+                EditedPHead.Email = pharmacyHead.Email;
+
+            if (!EditedPHead.Name.Equals(pharmacyHead.Name))
+                EditedPHead.Name = pharmacyHead.Name;
+
+            if (!EditedPHead.Password.Equals(pharmacyHead.Password))
+                EditedPHead.Password = pharmacyHead.Password;
+
+            if (!EditedPHead.Pharmacies.Equals(pharmacyHead.Pharmacies))
+                EditedPHead.Pharmacies = pharmacyHead.Pharmacies;
+
+            if (!EditedPHead.Medicines.Equals(pharmacyHead.Medicines))
+                EditedPHead.Medicines = pharmacyHead.Medicines;
+
             await _context.SaveChangesAsync();
         }
         public async Task ClaimPharmacy(RequestPharmacyHead pharmacy)
@@ -80,25 +88,39 @@ namespace FarmatikoData.FarmatikoRepo
 
         public PharmacyHead GetPharmacyHeadByUserName(string userName)
         {
+
+                       
             var PHead = _context.PharmacyHeads
                 .Where(x => x.Email.Equals(userName))
-                .FirstOrDefault();
+                .Select(x => new PharmacyHead 
+                {
+                   Email = x.Email,
+                   Name = x.Name,
+                   Password = x.Password,
+                   Medicines = x.Medicines,
+                   Pharmacies = x.Pharmacies
+                }).FirstOrDefault();
+
+            
 
             return PHead;
         }
 
         public List<PharmacyHeadMedicine> GetPharmacyHeadMedicines(string email)
         {
-            /*var meds = _context.Medicines.ToList();
-            var medicines = Medicines;*/
             var Phead = _context.PharmacyHeads.Where(x => x.Email.Equals(email)).FirstOrDefault();
-            var Medicines = _context.PharmacyHeadMedicines.Where(x => x.PheadId == Phead.Id).ToList();
-                /*.Select(x => x.Head.MedicineList)
-                .SelectMany(mList => mList)
-                .ToList();*/
+            var Medicines = _context.PharmacyHeadMedicines.Select(x => new PharmacyHeadMedicine 
+            { 
+                PheadId = x.PheadId,
+                Head = x.Head,
+                MedicineId = x.MedicineId,
+                Medicine = x.Medicine
+            }).ToList();
+            if (Medicines == null || Medicines == default)
+                Medicines = null;
+            var meds = Medicines.Where(x => x.PheadId == Phead.Id).ToList();
 
-
-            return Medicines;
+            return meds;
         }
 
         public IEnumerable<PharmacyHead> GetPharmacyHeads()

@@ -1,4 +1,5 @@
-﻿using FarmatikoData.FarmatikoRepoInterfaces;
+﻿using FarmatikoData.DTOs;
+using FarmatikoData.FarmatikoRepoInterfaces;
 using FarmatikoData.Models;
 using FarmatikoServices.FarmatikoServiceInterfaces;
 using System;
@@ -56,71 +57,85 @@ namespace FarmatikoServices.Services
 
 
 
-        public async Task UpdatePharmacyHead(PharmacyHead pharmacyHead)
+        public async Task UpdatePharmacyHead(PharmacyHeadDto pharmacyHead)
         {
             if (pharmacyHead != null)
             {
                 var phead = _iPHRepo.GetPharmacyHead(pharmacyHead.Email);
 
-                /*if (pharmacyHead.PharmaciesList.Count() == 0)
-                    pharmacyHead.PharmaciesList = null;*/
+                phead.Medicines = _repository.GetPHMedicines(phead.Email).ToList();
+                
+                List<Medicine> medicines = _repository.GetMedicines().ToList();
+                
+                List<Medicine> PHMedicines = medicines.Where(x => x.Id == phead.Medicines.Select(x => x.MedicineId).Single()).ToList();
+                
+                List<PharmacyHeadMedicine> list = new List<PharmacyHeadMedicine>();
 
+                
 
-                phead.PHMedicineList = _repository.GetPHMedicines(phead.Email);
-
-                if (phead.MedicineList != pharmacyHead.MedicineList)
+                if (!pharmacyHead.Medicines.Equals(PHMedicines))
                 {
-                    phead.MedicineList = pharmacyHead.MedicineList;
-                    List<PharmacyHeadMedicine> list = new List<PharmacyHeadMedicine>();
-                    if (pharmacyHead.MedicineList.Count() == 0)
+                    //phead.Medicines = pharmacyHead.Medicines;
+                    if (pharmacyHead.Medicines.Count() == 0)
                     {
-                        phead.MedicineList = null;
-                        int PHMId = phead.PHMedicineList.Select(x => x.Id).Single();
-                        int phId = phead.PHMedicineList.Select(x => x.PheadId).Single();
-                        int medId = phead.PHMedicineList.Select(x => x.MedicineId).Single();
+                        phead.Medicines = null;
+                        int PHMId = phead.Medicines.Select(x => x.Id).Single();
+                        int phId = phead.Medicines.Select(x => x.PheadId).Single();
+                        int medId = phead.Medicines.Select(x => x.MedicineId).Single();
                         _iPHRepo.DeletePHMedicine(PHMId, phId, medId);
                         return;
                     }
-                    List<PharmacyHeadMedicine> PHMList = new List<PharmacyHeadMedicine>();
-                    if (phead.PHMedicineList == pharmacyHead.PHMedicineList)
+                    foreach (var med in pharmacyHead.Medicines)
                     {
-                        foreach (var med in phead.MedicineList)
+
+                        PharmacyHeadMedicine PHMObj = phead.Medicines.Select(x => new PharmacyHeadMedicine
                         {
-                            //list = phead.PHMedicineList.ToList();
+                            Id = x.Id,
+                            PheadId = x.PheadId,
+                            Head = x.Head,
+                            MedicineId = x.MedicineId,
+                            Medicine = x.Medicine
+                        }).Where(x => !x.Medicine.Equals(med)).Single();
+                        if (PHMObj == null || PHMObj == default)
+                            break;
+                        if (PHMObj.MedicineId == med.Id)
+                            list.Add(PHMObj);
 
-                            var PHMObj = phead.PHMedicineList.Select(x => new PharmacyHeadMedicine
-                            {
-                                Id = x.Id,
-                                PheadId = x.PheadId,
-                                Head = x.Head,
-                                MedicineId = x.MedicineId,
-                                Medicine = x.Medicine
-                            }).Where(x => x.MedicineId == med.Id).Single();
-                            if (PHMObj == null || PHMObj == default)
-                                break;
-                            if (PHMObj.MedicineId == med.Id)
-                                list.Add(PHMObj);
-
-                        }
-
-                        phead.PHMedicineList = list;
                     }
+
+                    phead.Medicines = list;
 
                     await _iPHRepo.UpdatePharmacyHead(phead);
                 }
-                else if (!phead.Equals(pharmacyHead))
+                PharmacyHead head = new PharmacyHead()
                 {
-                    await _iPHRepo.UpdatePharmacyHead(pharmacyHead);
+                    Name = pharmacyHead.Name,
+                    Email = pharmacyHead.Email,
+                    Password = pharmacyHead.Password,
+                    Pharmacies = pharmacyHead.Pharmacies,
+                    Medicines = list
+                };
+                if (!phead.Equals(head))
+                {
+                    await _iPHRepo.UpdatePharmacyHead(head);
                 }
                 else throw new Exception("Cannot update pharmacy head since there was no changes.");
             }
             else throw new Exception("PharmacyHead has a null value.");
         }
-        public async Task<bool> Add(PharmacyHead pharmacyHead)
+        public async Task<bool> Add(PharmacyHeadDto pharmacyHead)
         {
             if (pharmacyHead != null)
             {
-                await _iPHRepo.Add(pharmacyHead);
+                PharmacyHead head = new PharmacyHead()
+                {
+                    Name = pharmacyHead.Name,
+                    Email = pharmacyHead.Email,
+                    Password = pharmacyHead.Password,
+                    Pharmacies = null,
+                    Medicines = null
+                };
+                await _iPHRepo.Add(head);
                 return true;
             }
             return false;
@@ -148,51 +163,42 @@ namespace FarmatikoServices.Services
             return false;
         }
 
-        public object GetPharmacyHead(string userName)
+        public PharmacyHeadDto GetPharmacyHead(string userName)
         {
             if (userName != null)
             {
                 var Phead = _iPHRepo.GetPharmacyHeadByUserName(userName);
                 List<PharmacyHeadMedicine> PHMedicines = _iPHRepo.GetPharmacyHeadMedicines(userName);
                 List<Medicine> Medicines = _repository.GetMedicines().ToList();
-                List<Medicine> PHMedicineList = new List<Medicine>();
+                List<Medicine> MedicineList = new List<Medicine>();
 
-
-                //var meds = PHMedicines.Where(x => x.Id == Phead.Id).ToList();
-                var pharmacies = _iPHRepo.GetPharmacies();
-                var PheadPharms = pharmacies.Where(x => x.PheadId == Phead.Id).ToList();
                 var user = _repository.GetRole(userName);
 
 
                 if (user.UserRole.ToString().Equals("Admin"))
                 {
-                    var Admin = new PharmacyHead()
+                    List<Pharmacy> pharmacies = new List<Pharmacy>();
+                    pharmacies = Phead.Pharmacies;
+                    var Admin = new PharmacyHeadDto()
                     {
                         Id = user.Id,
                         Email = user.Email,
                         Name = user.Name,
                         Password = user.Password,
-                        PharmaciesList = Phead.PharmaciesList
+                        Pharmacies = pharmacies
                     };
 
                     return Admin;
                 }
-
-                if (PheadPharms.Count() > 0 || PheadPharms != null)
-                    Phead.PharmaciesList = PheadPharms;
-                else Phead.PharmaciesList = pharmacies;
-
-                if (Phead.PHMedicineList.Count() > 0 || Phead.PHMedicineList != null)
+                else
                 {
                     foreach (var med in Medicines)
                     {
-
-                        var PHMObj = Phead.PHMedicineList.Where(x => x.MedicineId == med.Id).SingleOrDefault();
+                        var PHMObj = Phead.Medicines.Where(x => x.MedicineId == med.Id).SingleOrDefault();
                         if (PHMObj == null)
                         {
                             continue;
                         }
-                        var phm = Phead.MedicineList;
                         if (PHMObj.MedicineId == med.Id)
                         {
                             var medicine = new Medicine()
@@ -206,26 +212,21 @@ namespace FarmatikoServices.Services
                                 Price = med.Price,
                                 Packaging = med.Packaging
                             };
-                            PHMedicineList.Add(medicine);
+                            MedicineList.Add(medicine);
                         }
                     }
-                    Phead.MedicineList = PHMedicineList;
-                }
-                else
-                {
-                    Phead.MedicineList = Medicines;
                 }
 
-                PharmacyHead pharHead = new PharmacyHead()
+                PharmacyHeadDto pharmacyHead = new PharmacyHeadDto()
                 {
                     Id = Phead.Id,
-                    MedicineList = Phead.MedicineList,
-                    PharmaciesList = Phead.PharmaciesList,
+                    Medicines = MedicineList,
+                    Pharmacies = Phead.Pharmacies,
                     Email = Phead.Email,
                     Name = Phead.Name,
                     Password = Phead.Password
                 };
-                return pharHead;
+                return pharmacyHead;
             }
             else throw new Exception("Username is null.");
         }

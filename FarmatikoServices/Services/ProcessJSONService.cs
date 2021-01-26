@@ -173,7 +173,7 @@ namespace FarmatikoServices.Services
 
                     HealthFacility facility = _service.GetFacilityJSON(Convert.ToString(FacilityName));
 
-                    if (facility != null)
+                    if (facility != null && facility != default)
                     {
                         HealthFacility Facility = new HealthFacility(
                            facility.Name,

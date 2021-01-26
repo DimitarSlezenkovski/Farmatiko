@@ -26,6 +26,6 @@ namespace FarmatikoData.Models
             this.WorkAllTime = WorkAllTime;
         }
         public int PheadId { get; set; }
-        public PharmacyHead PHead { get; internal set; }
+        public PharmacyHead PharmacyHead { get; set; }
     }
 }

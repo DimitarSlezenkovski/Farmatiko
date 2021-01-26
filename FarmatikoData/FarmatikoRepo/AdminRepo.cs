@@ -26,15 +26,19 @@ namespace FarmatikoData.FarmatikoRepo
         //GET
         public async Task<IEnumerable<PharmacyHead>> GetPharmacyHeads()
         {
-            var PHeads = await _context.PharmacyHeads.OrderBy(x => x.Name).ToListAsync();
+            var PHeads = await _context.PharmacyHeads
+                .Include(x => x.Medicines)
+                .Include(x => x.Pharmacies)
+                .OrderBy(x => x.Name)
+                .ToListAsync();
             return PHeads;
         }
         //POST
-        public void RemoveClaimRequest(int Id)
+        public async void RemoveClaimRequest(int Id)
         {
             var req = _context.PHRequests.Where(x => x.Id == Id).FirstOrDefault();
             _context.PHRequests.Remove(req);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

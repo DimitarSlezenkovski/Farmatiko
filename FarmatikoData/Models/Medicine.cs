@@ -22,7 +22,7 @@ namespace FarmatikoData.Models
         public float Price { get; set; }
         public string Packaging { get; set; }
         //[JsonPropertyName("PHMedicineList")]
-        public ICollection<PharmacyHeadMedicine> MedicineList { get; set; }
+        public ICollection<PharmacyHeadMedicine> Medicines { get; set; }
         public Medicine(string Name, string Strength, string Form, string WayOfIssuing, string Manufacturer, float Price, string Packaging)
         {
             this.Name = Name;

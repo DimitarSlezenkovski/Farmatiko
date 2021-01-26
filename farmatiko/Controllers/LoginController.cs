@@ -81,9 +81,6 @@ namespace Farmatiko.Controllers
         [Authorize]
         public ActionResult Logout()
         {
-            // optionally "revoke" JWT token on the server side --> add the current token to a block-list
-            // https://github.com/auth0/node-jsonwebtoken/issues/375
-
             var userName = User.Identity.Name;
             _jwtAuthManager.RemoveRefreshTokenByUserName(userName);
             _logger.LogInformation($"User [{userName}] logged out the system.");

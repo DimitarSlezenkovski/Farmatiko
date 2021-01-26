@@ -174,8 +174,8 @@ namespace FarmatikoData.FarmatikoRepo
 
         public async Task RemoveMedicine(Medicine medicine)
         {
-            await Task.Run(() => _context.Medicines.Remove(medicine));
-            _context.SaveChanges();
+            _context.Medicines.Remove(medicine);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdatePandemic(Pandemic pandemic)
@@ -194,8 +194,8 @@ namespace FarmatikoData.FarmatikoRepo
 
         public async Task RemovePharmacy(Pharmacy pharmacy)
         {
-            await Task.Run(() => _context.Pharmacies.Remove(pharmacy));
-            _context.SaveChanges();
+            _context.Pharmacies.Remove(pharmacy);
+            await _context.SaveChangesAsync();
         }
         //not impl
         public Task UpdateWorker(HealthcareWorker worker)
@@ -212,7 +212,7 @@ namespace FarmatikoData.FarmatikoRepo
             Pharmacy.Address = pharmacy.Address;
             await _context.SaveChangesAsync();
         }
-        //ke vidime
+        //not implemented, not needed 
         public Task UpdateMedicine(Medicine medicine)
         {
             throw new NotImplementedException();
@@ -235,6 +235,7 @@ namespace FarmatikoData.FarmatikoRepo
                 Password = x.Password,
                 UserRole = x.UserRole
             });
+            
             return users;
         }
 
@@ -256,7 +257,7 @@ namespace FarmatikoData.FarmatikoRepo
                 Manufacturer = x.Manufacturer,
                 Price = x.Price,
                 Packaging = x.Packaging,
-                MedicineList = x.MedicineList
+                Medicines = x.Medicines
 
             }).ToList();
             return Medicines; 
@@ -265,7 +266,7 @@ namespace FarmatikoData.FarmatikoRepo
         public ICollection<PharmacyHeadMedicine> GetPHMedicines(string email)
         {
             var head = _context.PharmacyHeads.Where(x => x.Email.Equals(email)).FirstOrDefault();
-            var phmeds = _context.PharmacyHeadMedicines.Where(x => x.PheadId == head.Id).ToList();
+            var phmeds = _context.PharmacyHeadMedicines.Where(x => x.PheadId == head.Id).Include(x => x.Medicine).ToList();
             return phmeds;
         }
 

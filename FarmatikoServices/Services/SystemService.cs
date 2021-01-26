@@ -6,7 +6,7 @@ namespace FarmatikoServices.Services
 {
     public interface ISystemService
     {
-
+        public void ParseHTML();
     }
     public class SystemService
     {

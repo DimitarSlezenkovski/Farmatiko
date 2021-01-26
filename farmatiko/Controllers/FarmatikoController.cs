@@ -23,7 +23,7 @@ namespace Farmatiko.Controllers
         public void InsertData()
         {
             //_JSONservice.DownloadPharmaciesExcel();
-            _JSONservice.GetProcessedHealthcareWorkersFromJSON();
+            //_JSONservice.GetProcessedHealthcareWorkersFromJSON();
             //_JSONservice.GetProcessedHealthFacilitiesFromJSON();
             //_JSONservice.GetProcessedMedicinesFromJSON();
             //_JSONservice.GetProcessedPandemicsFromJSONApi();

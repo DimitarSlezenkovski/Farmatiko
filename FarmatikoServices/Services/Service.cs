@@ -129,7 +129,7 @@ namespace FarmatikoServices.Services
         // Ovaa kontrola ja ima samo admin
         public User MakeUser(PharmacyHead head)
         {
-            var users = _repository.GetUsers();
+            
             
             User user = new User()
             {

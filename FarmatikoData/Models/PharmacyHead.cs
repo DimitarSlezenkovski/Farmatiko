@@ -20,13 +20,12 @@ namespace FarmatikoData.Models
         [Required]
         [JsonProperty("Passwd")]
         public string Password { get; set; }
+        [JsonProperty("PharmacyList")]
+        public virtual List<Pharmacy> Pharmacies { get; set; }
+        public virtual List<PharmacyHeadMedicine> Medicines { get; set; }
+        
+        public User User { get; set; }
 
-        [JsonProperty("PharmacyMedicines")]
-        public List<Medicine> MedicineList { get; set; }
-        [JsonProperty("Pharmacy")]
-        public ICollection<Pharmacy> PharmaciesList { get; set; }
-        //[JsonProperty("PHMedicineList")]
-        public ICollection<PharmacyHeadMedicine> PHMedicineList { get; set; }
 
     }
 }
