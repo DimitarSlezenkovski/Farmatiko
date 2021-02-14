@@ -23,7 +23,8 @@ namespace FarmatikoData.Models
         [JsonProperty("PharmacyList")]
         public virtual List<Pharmacy> Pharmacies { get; set; }
         public virtual List<PharmacyHeadMedicine> Medicines { get; set; }
-        
+
+        public int UserID { get; set; }
         public User User { get; set; }
 
 

@@ -1,11 +1,33 @@
-<h3>Повеќе инфо</h3>
+<h3>Повеќе информации</h3>
+<table class="table table-striped">
+    <tbody>
+        <tr>
+            <td>Име</td>
+            <td>{{facility?.name}}</td>
+        </tr>
+        <tr>
+            <td>Општина</td>
+            <td>{{facility?.municipality}}</td>
+        </tr>
+        <tr>
+            <td>Тип на установа</td>
+            <td>{{facility?.type}}</td>
+        </tr>
+        <tr>
+            <td>Адреса</td>
+            <td>{{facility?.address}}</td>
+        </tr>
+        <tr>
+            <td>Е-пошта</td>
+            <td>{{facility?.email}}</td>
+        </tr>
+        <tr>
+            <td>Телефон</td>
+            <td>{{facility?.phone}}</td>
+        </tr>
+    </tbody>
+</table>
+
+<div style="height: 200px;" leaflet [leafletOptions]="options" *ngIf="mapShown"></div>
 <br>
-<p>ИД: {{facility.id}}</p>
-<p>Име: {{facility.name}}</p>
-<p>Општина: {{facility.municipality}}</p>
-<p>Тип на установа: {{facility.type}}</p>
-<p>Адреса: {{facility.address}}</p>
-<p>Адреса: {{facility.email}}</p>
-<p>Адреса: {{facility.phone}}</p>
-<br>
-<p><a (click)="close()">Затвори</a></p>
+<p><button mat-button color="primary" (click)="close()">Затвори</button></p>

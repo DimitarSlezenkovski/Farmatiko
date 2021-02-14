@@ -17,13 +17,16 @@ using System.Text;
 using FarmatikoServices.Auth;
 using FarmatikoServices.Infrastructure;
 using System;
-using Newtonsoft.Json.Serialization;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
+using FarmatikoServices.Services.JobDTO;
+
 namespace Farmatiko
 {
     public class Startup
     {
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -53,9 +56,12 @@ namespace Farmatiko
             var connectionString = Configuration.GetSection("ConnectionStrings").GetValue<string>("FarmatikoConnection");
             services.AddEntityFrameworkNpgsql().AddDbContext<FarmatikoDataContext>(opt => opt.UseNpgsql(connectionString));
 
+
+
             services.AddScoped<IPHRepo, PHRepo>();
-            services.AddTransient<IRepository, Repository>();
-            services.AddTransient<IAdminRepo, AdminRepo>();
+            services.AddScoped<IRepository, Repository>();
+            services.AddScoped<IAdminRepo, AdminRepo>();
+            services.AddTransient<IUpdateDataRepo, UpdateDataRepo>();
 
             services.AddTransient<IPHService, PHService>();
             services.AddTransient<IAdminService, AdminService>();
@@ -64,8 +70,6 @@ namespace Farmatiko
             services.AddTransient<IProcessJSONService, ProcessJSONService>();
 
             services.AddTransient<ILogger, Logger<ProcessJSONService>>();
-
-            // services.AddTransient<ISystemService, SystemService>();
 
 
             var jwtTokenConfig = Configuration.GetSection("jwtTokenConfig").Get<JwtTokenConfig>();
@@ -107,7 +111,7 @@ namespace Farmatiko
 
                      });
 */
-            services.AddSingleton<IJwtAuthManager, JwtAuthManager>();
+            services.AddSingleton<IJwtAuthManager>(new JwtAuthManager(jwtTokenConfig));
             services.AddHostedService<JwtRefreshTokenCache>();
             services.AddScoped<IAuthService, AuthService>();
             //If we add imgs
@@ -116,6 +120,20 @@ namespace Farmatiko
                 o.MultipartBodyLengthLimit = int.MaxValue;
                 o.MemoryBufferThreshold = int.MaxValue;
             });*/
+
+            services.AddSingleton<IJobFactory, SingletonUpdateDataJobFactory>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+
+            services.AddTransient<UpdateDataJob>();
+            services.AddSingleton(new JobSchedule(
+            jobType: typeof(UpdateDataJob),
+            cronExpression: "0/30 * * * * ?"));
+
+
+            // "0 0 12 */7 * ?"
+
+
+            services.AddHostedService<UpdateDataHostedService>();
 
         }
 

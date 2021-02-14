@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   username = '';
   password = '';
   loginError = false;
+  expanded = false;
   private subscription: Subscription;
 
   constructor(private authService: AuthService,private router: Router, private route: ActivatedRoute) {
@@ -65,5 +66,9 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
       );
     this.loginForm.reset();
+  }
+
+  expandRegistration() {
+    this.expanded = !this.expanded;
   }
 }

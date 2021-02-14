@@ -177,9 +177,8 @@ export class DataService {
                         catchError(this.handleError)
                     );
     }
-    //PharmacyHead PUT
     updatePharmacyHead(head: IPharmacyHead) : Observable<IPharmacyHead> {
-        return this.http.put<IPharmacyHead>(this.basePharmacyHead + '/update', head)
+        return this.http.post<IPharmacyHead>(this.basePharmacyHead + '/update', head)
                    .pipe(
                         map((data) => {
                             return data;
@@ -187,14 +186,23 @@ export class DataService {
                         catchError(this.handleError)
                     );
     }
-    //PharmacyHead DELETE
-    deletePharmacyHead(id: string) : Observable<boolean> {
-        return this.http.delete<boolean>(this.basePharmacyHead + '/delete/' + id)
-                   .pipe(catchError(this.handleError));
+    deletePharmacyHead(id: string) : Observable<any> {
+        return this.http.post<any>(this.basePharmacyHead + '/delete/' + id, id)
+                    .pipe(
+                        map((data) => {
+                            return data;
+                        }),
+                        catchError(this.handleError)
+                    );
     }
-    deleteClaimingRequest(id: string) : Observable<boolean> {
-        return this.http.delete<boolean>(this.basePharmacyHead + '/requests/' + id)
-                   .pipe(catchError(this.handleError));
+    deleteClaimingRequest(req: IPharmacyHeadRequest) : Observable<boolean> {
+        return this.http.post<boolean>(this.basePharmacyHead + '/requests/' + req.id, req)
+                    .pipe(
+                        map((data) => {
+                            return data;
+                        }),
+                        catchError(this.handleError)
+                    );
     }
 
     private handleError(error: HttpErrorResponse) {

@@ -5,7 +5,20 @@
   <mat-tab class="tab" label="Здравствени установи">
   <div class="wrapper">
     <div class="header">
-    <h2>Здравствени установи</h2>
+    <h2>Здравствени установи 
+      <button mat-icon-button color="primary" (click)="refreshMap()" [disabled]="!showMap">
+        <mat-icon>refresh</mat-icon>Освежи
+      </button>
+      <button mat-icon-button color="accent" [disabled]="clicked" (click)="toggleMap(); clicked = true">
+        <mat-icon>map</mat-icon>Активирај
+      </button>
+    </h2>
+    <div class="map-wrapper" *ngIf="showMap">
+      <div class="map-frame">
+        <div id="map" style="height: 400px;" leaflet [leafletOptions]="options"></div>
+      </div>
+    </div>
+
   <mat-form-field>
     <input matInput (keyup)="applyFilterFacilities($event.target.value)" placeholder="Пронајди установа">
   </mat-form-field>
@@ -15,20 +28,14 @@
         <tr>
       	  <th>Име</th>
       	  <th>Општина</th>
-      	  <th>Адреса</th>
       	  <th>Тип</th>
-      	  <th>Е-пошта</th>
-      	  <th>Телефон</th>
       	</tr>
       </thead>
       <tbody>
-      	<tr *ngFor="let facility of filteredFacilities">
-      	  <td><a (click)="openFacilityDialog(facility)">{{ facility.name }}</a></td>
+      	<tr *ngFor="let facility of filteredFacilities" (click)="openFacilityDialog(facility)" class="tableRow">
+      	  <td>{{ facility.name }}</td>
       	  <td>{{ facility.municipality }}</td>
-      	  <td>{{ facility.address }}</td>
       	  <td>{{ facility.type }}</td>
-      	  <td>{{ facility.email }}</td>
-      	  <td>{{ facility.phone }}</td>
       	</tr>
     </tbody>
   </table>
@@ -47,16 +54,12 @@
         <tr>
       	  <th>Име</th>
       	  <th>Гранка</th>
-      	  <th>Установа</th>
-      	  <th>Назив</th>
       	</tr>
       </thead>
       <tbody>
-      	<tr *ngFor="let worker of filteredWorkers">
-      	  <td><a (click)="openWorkerDialog(worker)">{{ worker.name }}</a></td>
+      	<tr *ngFor="let worker of filteredWorkers" (click)="openWorkerDialog(worker)" class="tableRow">
+      	  <td>{{ worker.name }}</td>
       	  <td>{{ worker.branch }}</td>
-      	  <td>{{ worker.facility }}</td>
-      	  <td>{{ worker.title }}</td>
       	</tr>
     </tbody>
   </table>

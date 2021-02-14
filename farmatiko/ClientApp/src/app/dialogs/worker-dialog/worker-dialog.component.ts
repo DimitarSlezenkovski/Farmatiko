@@ -9,6 +9,7 @@ import { IHealthcareWorkers } from '../../shared/interfaces';
 })
 export class WorkerDialogComponent implements OnInit {
   worker: IHealthcareWorkers;
+  isExpanded: boolean = false;
 
   constructor(private dialogRef: MatDialogRef<WorkerDialogComponent>, @Inject(MAT_DIALOG_DATA) data) {
     this.worker = data;
@@ -19,6 +20,10 @@ export class WorkerDialogComponent implements OnInit {
 
   close() {
     this.dialogRef.close();
+  }
+
+  toggleExpansion() {
+    this.isExpanded = !this.isExpanded;
   }
 
 }

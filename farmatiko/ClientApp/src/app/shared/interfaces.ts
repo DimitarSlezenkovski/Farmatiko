@@ -25,6 +25,7 @@ export interface IMedicine {
     manufacturer: string;
     price: number;
     packaging: string;
+    headNames?: string[];
 }
 
 export interface IPandemic {
@@ -45,6 +46,7 @@ export interface IPharmacy {
     location: string;
     address: string;
     workAllTime?: boolean;
+    headName?: string;
 }
 
 export interface IPharmacyHead {
@@ -61,4 +63,4 @@ export interface IPharmacyHeadRequest {
     id?: string;
     PharmacyHead?: IPharmacyHead;
     Pharmacy?: IPharmacy;
-}  
+}

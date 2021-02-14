@@ -23,7 +23,7 @@
             <a class="nav-link text-dark" [routerLink]="['/mapa']">Мапа</a>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/koronavirus']">Коронавирус</a>
+            <a class="nav-link text-dark" [routerLink]="['/koronavirus']">Пандемии</a>
           </li>
           <li *ngIf="loggedIn">
             <button mat-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
@@ -31,6 +31,9 @@
               <button mat-menu-item [routerLink]="['/dashboard']"><mat-icon>dashboard</mat-icon>Контролна табла</button>
               <button mat-menu-item (click)="logout()"><mat-icon>exit_to_app</mat-icon>Одјави се</button>
             </mat-menu>
+          </li>
+          <li *ngIf="!loggedIn">
+            <button mat-raised-button color="primary" [routerLink]="['/login']"><mat-icon>account_circle</mat-icon> Најава</button>
           </li>
         </ul>
       </div>

@@ -5,6 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from './shared/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 import { CoreModule } from './shared/core.module';
 
@@ -64,6 +65,7 @@ import { ListMedicinesDialogComponent } from './dialogs/list-medicines-dialog/li
     BrowserAnimationsModule,
     MaterialModule,
     ReactiveFormsModule,
+    LeafletModule,
     CoreModule
   ],
   providers: [

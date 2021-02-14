@@ -1,12 +1,78 @@
-<h3>Повеќе инфо</h3>
+<h3>Повеќе информации</h3>
 <br>
-<p>ИД: {{worker.id}}</p>
-<p>Име: {{worker.name}}</p>
-<p>Гранка: {{worker.branch}}</p>
-<p>Титула: {{worker.title}}</p>
-<br>
-<p>Институција: {{worker.facility.name}}</p>
-<p>{{worker.facility.municipality}}</p>
-<p>{{worker.facility.type}}</p>
-<br>
-<p><a (click)="close()">Затвори</a></p>
+<table class="table table-striped">
+    <tbody>
+        <tr>
+            <td>Име</td>
+            <td>{{worker?.name}}</td>
+        </tr>
+        <tr>
+            <td>Гранка</td>
+            <td>{{worker?.branch}}</td>
+        </tr>
+        <tr>
+            <td>Титула</td>
+            <td>{{worker?.title}}</td>
+        </tr>
+    </tbody>
+    <br>
+    <tbody *ngIf="worker?.facility">
+        <tr>
+            <td>Институција</td>
+            <td>{{worker?.facility?.name}}</td>
+        </tr>
+        <tr *ngIf="isExpanded">
+            <td>Општина</td>
+            <td>{{worker?.facility?.municipality}}</td>
+        </tr>
+        <tr *ngIf="isExpanded">
+            <td>Тип</td>
+            <td>{{worker?.facility?.type}}</td>
+        </tr>
+        <tr *ngIf="isExpanded">
+            <td>Адреса</td>
+            <td>{{worker.facility?.address}}</td>
+        </tr>
+        <tr *ngIf="isExpanded">
+            <td>Е-пошта</td>
+            <td>{{worker.facility?.email}}</td>
+        </tr>
+        <tr *ngIf="isExpanded">
+            <td>Телефон</td>
+            <td>{{worker.facility?.phone}}</td>
+        </tr>
+    </tbody>
+    <tbody *ngIf="!worker?.facility">
+        <tr>
+            <td>Институција</td>
+            <td>Нема податок</td>
+        </tr>
+        <tr *ngIf="isExpanded">
+            <td>Општина</td>
+            <td>Нема податок</td>
+        </tr>
+        <tr *ngIf="isExpanded">
+            <td>Тип</td>
+            <td>Нема податок</td>
+        </tr>
+        <tr *ngIf="isExpanded">
+            <td>Адреса</td>
+            <td>Нема податок</td>
+        </tr>
+        <tr *ngIf="isExpanded">
+            <td>Е-пошта</td>
+            <td>Нема податок</td>
+        </tr>
+        <tr *ngIf="isExpanded">
+            <td>Телефон</td>
+            <td>Нема податок</td>
+        </tr>
+    </tbody>
+</table>
+<button mat-icon-button color="primary" *ngIf="!isExpanded" (click)="toggleExpansion()" style="min-width: 100%">
+    <mat-icon>expand_more</mat-icon>
+</button>
+<button mat-icon-button color="primary" *ngIf="isExpanded" (click)="toggleExpansion()" style="min-width: 100%">
+    <mat-icon>expand_less</mat-icon>
+</button>
+<p><button mat-button color="primary" (click)="close()">Затвори</button></p>

@@ -9,7 +9,6 @@ namespace FarmatikoServices.FarmatikoServiceInterfaces
     public interface IProcessJSONService
     {
         void GetProcessedHealthFacilitiesFromJSON();
-        void GetProcessedPandemicsFromJSONApi();
         void GetProcessedHealthcareWorkersFromJSON();
         void GetProcessedMedicinesFromJSON();
         void DownloadPharmaciesExcel();

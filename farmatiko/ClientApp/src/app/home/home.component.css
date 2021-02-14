@@ -1,7 +1,6 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  max-height: 500px;
   min-width: 300px;
 }
 
@@ -25,4 +24,27 @@ width: 100%;
 
 h2 {
   padding: 1em 0;
+}
+.tableRow:hover {
+  background-color: #D4F2CD;
+  transform: scale(1.0005);
+}
+
+h2 button {
+  float: right;
+  padding: 0 5em;
+}
+
+#map {
+  height: 100%;
+}
+
+.map-frame {
+  border: 2px solid black;
+  height: 100%;
+}
+
+.map-wrapper {
+  margin: 0 3em 3em 3em;
+  min-height: 400px;
 }

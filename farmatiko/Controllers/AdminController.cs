@@ -43,24 +43,26 @@ namespace Farmatiko.Controllers
         //POST
         [HttpPost]
         [Route("api/pharmacyhead/add")]
-        public async Task<IActionResult> AddPharmacyHead([FromBody]PharmacyHead pharmacyHead)
+        public async Task<IActionResult> AddPharmacyHead([FromBody]PharmacyHeadDto pharmacyHead)
         {
-            await _service.AddPharmacyHead(pharmacyHead);
-            return Ok("Pharmacy added.");
+            bool Success = await _service.AddPharmacyHead(pharmacyHead);
+            if (Success)
+                return Ok("Pharmacy added.");
+            return BadRequest();
         }
 
-        [HttpDelete]
+        [HttpPost]
         [Route("api/pharmacyhead/delete/{Id}")] 
         public async Task<IActionResult> RemovePharmacyHead([FromRoute] int Id)
         {
             await _service.RemovePharmacyHead(Id);
             return Ok();
         }
-        [HttpDelete]
+        [HttpPost]
         [Route("api/pharmacyhead/requests/{Id}")]
-        public IActionResult RejectRequest([FromRoute] int Id)
+        public IActionResult RejectRequest([FromBody] RequestPharmacyHead req)
         {
-            bool Success = _adminService.RejectRequest(Id);
+            bool Success = _adminService.RejectRequest(req);
             return Ok(Success);
         }
         [HttpPost]

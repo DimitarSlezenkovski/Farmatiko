@@ -37,43 +37,45 @@ namespace FarmatikoData
             modelBuilder.Entity<RequestPharmacyHead>()
                 .ToTable("PHRequests");
 
+            modelBuilder.Entity<PharmacyHead>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<PharmacyHeadMedicine>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
+
             modelBuilder.Entity<Medicine>()
-                .Property(x => x.Id)
-                .HasIdentityOptions(startValue: 1);
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<Pharmacy>()
-                .Property(x => x.Id)
-                .HasIdentityOptions(startValue: 1);
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<PharmacyHead>()
-                .Property(x => x.Id)
-                .HasIdentityOptions(startValue: 1);
-
-            modelBuilder.Entity<PharmacyHeadMedicine>()
-                .Property(x => x.Id)
-                .HasIdentityOptions(startValue: 1);
-
-            modelBuilder.Entity<RequestPharmacyHead>()
-                .Property(x => x.Id)
-                .HasIdentityOptions(startValue: 1);
-
-            /*modelBuilder.Entity<User>()
-                .Property(x => x.Id)
-                .HasIdentityOptions(startValue: 1);
-
-            modelBuilder.Entity<PharmacyHeadMedicine>()
-                .HasKey(phm => new { phm.PheadId, phm.MedicineId });
-
-            modelBuilder.Entity<PharmacyHead>()
-                .HasMany<Pharmacy>(p => p.Pharmacy)
-                .WithOne(p => p.PharmacyHead)
-                .HasForeignKey();
+                .HasMany<Pharmacy>(p => p.Pharmacies)
+                .WithOne(p => p.PharmacyHead);
 
             modelBuilder.Entity<Pharmacy>()
                 .HasOne<PharmacyHead>(p => p.PharmacyHead)
-                .WithMany(p => p.Pharmacy);
-            */
-            
+                .WithMany(p => p.Pharmacies)
+                .HasForeignKey(x => x.PheadId);
+
+            modelBuilder.Entity<PharmacyHeadMedicine>()
+            .HasKey(bc => new { bc.PheadId, bc.MedicineId});
+
+            modelBuilder.Entity<PharmacyHeadMedicine>()
+                .HasOne(bc => bc.Head)
+                .WithMany(b => b.Medicines)
+                .HasForeignKey(bc => bc.PheadId);
+
+            modelBuilder.Entity<PharmacyHeadMedicine>()
+                .HasOne(bc => bc.Medicine)
+                .WithMany(c => c.Medicines)
+                .HasForeignKey(bc => bc.MedicineId);
+
+
             base.OnModelCreating(modelBuilder);
         }
     }

@@ -1,12 +1,44 @@
-<h3>Повеќе инфо</h3>
-<br>
-<p>ИД: {{medicine.id}}</p>
-<p>Име: {{medicine.name}}</p>
-<p>Форма: {{medicine.form}}</p>
-<p>Пакување: {{medicine.packaging}}</p>
-<p>Цена: {{medicine.price}}</p>
-<p>Јачина: {{medicine.strength}}</p>
-<p>Начин на издавање: {{medicine.wayOfIssuing}}</p>
-<p>Производител: {{medicine.manufacturer}}</p>
-<br>
-<p><a (click)="close()">Затвори</a></p>
+<h3>Повеќе информации</h3>
+<table class="table table-striped">
+    <tbody>
+        <tr>
+            <td>Име</td>
+            <td>{{medicine?.name}}</td>
+        </tr>
+        <tr>
+            <td>Форма</td>
+            <td>{{medicine?.form}}</td>
+        </tr>
+        <tr>
+            <td>Пакување</td>
+            <td>{{medicine?.packaging}}</td>
+        </tr>
+        <tr>
+            <td>Цена</td>
+            <td>{{medicine?.price}}</td>
+        </tr>
+        <tr>
+            <td>Јачина</td>
+            <td>{{medicine?.strength}}</td>
+        </tr>
+        <tr>
+            <td>Начин на издавање</td>
+            <td>{{medicine?.wayOfIssuing}}</td>
+        </tr>
+        <tr>
+            <td>Производител</td>
+            <td>{{medicine?.manufacturer}}</td>
+        </tr>
+    </tbody>
+</table>
+<div *ngIf="medicine?.headNames">
+    <h5>Достапен во аптеките на:</h5>
+    <table class="table table-striped">
+        <tbody>
+            <tr *ngFor="let head of medicine?.headNames">
+                <td>{{head}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<p><button mat-button color="primary" (click)="close()">Затвори</button></p>

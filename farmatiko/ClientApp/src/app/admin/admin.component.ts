@@ -55,11 +55,9 @@ export class AdminComponent implements OnInit {
 
   createHead() {
     this.dataService.insertPharmacyHead(this.head)
-        .subscribe((cHead: IPharmacyHead) => {
-          if(cHead) {
+        .subscribe((cHead) => {
             this.heads.push(cHead);
             this.openSnackBar("New head created!","OK");
-          }
         },
         (err: any) => console.log(err),
         () => console.log("PharmacyHead inserted"));
@@ -78,7 +76,10 @@ export class AdminComponent implements OnInit {
           }
         },
         (err: any) => console.log(err),
-        () => console.log("PharmacyHead deleted"));
+        () => {
+          console.log("PharmacyHead deleted");
+          location.reload();
+        });
   }
 
   openEditPharmacyHeadDialog(eHead: IPharmacyHead) {
@@ -87,23 +88,18 @@ export class AdminComponent implements OnInit {
       data: eHead
     });
     dialogRef.afterClosed().subscribe((editedHead: IPharmacyHead) => {
-      if(editedHead){
-        console.log(editedHead);
-        this.heads = this.heads.filter(x => x !== eHead);
-        this.heads.push(editedHead);
-        this.dataService.updatePharmacyHead(editedHead)
-            .subscribe((hd: IPharmacyHead) => {
-              if(hd) {
-                this.openSnackBar("Success! PharmacyHead edited", "OK").onAction().subscribe(() => {
-                  window.location.reload();
-                });
-              }
-              else {
-                this.openSnackBar("PharmacyHead edit failed", "Try again");
-              }
-            },
-            (err: any) => console.log(err),
-            () => console.log('PharmacyHead data updated'));
+      if(editedHead) {
+          console.log(editedHead);
+          this.heads = this.heads.filter(x => x !== eHead);
+          this.heads.push(editedHead);
+          this.dataService.updatePharmacyHead(editedHead)
+              .subscribe((hd: IPharmacyHead) => {
+                  this.openSnackBar("Success! PharmacyHead edited", "OK").onAction().subscribe(() => {
+                    location.reload();
+                  });
+              },
+              (err: any) => console.log(err),
+              () => console.log('PharmacyHead data updated'));
       }
     });
   }
@@ -123,28 +119,34 @@ export class AdminComponent implements OnInit {
   }
 
   rejectRequest(req: IPharmacyHeadRequest) {
-    this.dataService.deleteClaimingRequest(req.id)
+    this.dataService.deleteClaimingRequest(req)
         .subscribe((status: boolean) => {
           if(status) {
-            this.openSnackBar("Request rejected!","OK");
-          }
-          else {
-            this.openSnackBar("Something went wrong","Try again");
+            this.openSnackBar("Request processed!","OK");
           }
         },
         (err: any) => console.log(err),
-        () => console.log("PharmacyHeadRequest deleted"));
+        () => {
+          console.log("PharmacyHeadRequest deleted");
+          location.reload();
+        });
   }
 
   approveRequest(req: IPharmacyHeadRequest) {
     if(req) {
+      if (req.PharmacyHead.Pharmacy == null){
+        req.PharmacyHead.Pharmacy = [];
+      }
     req.PharmacyHead.Pharmacy.push(req.Pharmacy);
     this.dataService.updatePharmacyHead(req.PharmacyHead)
         .subscribe(() => {
           this.rejectRequest(req);
         },
         (err: any) => console.log(err),
-        () => console.log("PharmacyHead updated"))
+        () => {
+          console.log("PharmacyHead updated");
+          location.reload();
+        })
     }
   }
 

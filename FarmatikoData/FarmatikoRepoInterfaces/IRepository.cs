@@ -17,7 +17,8 @@ namespace FarmatikoData.FarmatikoRepoInterfaces
         Task<IEnumerable<Medicine>> GetMedicinesAsync();
         ICollection<Medicine> GetMedicines();
         Task<Pandemic> GetPandemic();
-        Task<IEnumerable<Pharmacy>> GetPharmacies();
+        Task<List<PharmacyHeadMedicine>> GetAllPHMedicines();
+        Task<List<Pharmacy>> GetPharmacies();
         Task<Pharmacy> GetPharmacy(int id);
         Task<HealthcareWorker> GetWorker(int id);
         Task<IEnumerable<HealthFacility>> SearchFacilities(string query);
@@ -44,6 +45,7 @@ namespace FarmatikoData.FarmatikoRepoInterfaces
         Task RemovePharmacyHead(int Id);
         User GetRole(string userName);
         ICollection<PharmacyHeadMedicine> GetPHMedicines(string email);
-        Task AddUser(User user);
+        ICollection<PharmacyHeadMedicine> GetPHMedicines();
+        //Task<bool> AddUser(User user);
     }
 }

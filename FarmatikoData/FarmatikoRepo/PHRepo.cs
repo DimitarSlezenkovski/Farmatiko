@@ -40,28 +40,43 @@ namespace FarmatikoData.FarmatikoRepo
         //POST
         public async Task UpdatePharmacyHead(PharmacyHead pharmacyHead)
         {
-            var Phead = await _context.PharmacyHeads.Where(x => x.Email == pharmacyHead.Email).FirstOrDefaultAsync();
-            var EditedPHead = await _context.PharmacyHeads.AsNoTracking<PharmacyHead>().Where(x => x.Email == pharmacyHead.Email).FirstOrDefaultAsync();
+            var user = await _context.Users.Where(x => x.Email == pharmacyHead.Email).FirstOrDefaultAsync();
+            var EditedPHead = await _context.PharmacyHeads.Where(x => x.Email.Equals(pharmacyHead.Email)).FirstOrDefaultAsync();
 
-            if (!EditedPHead.Email.Equals(pharmacyHead.Email))
+            /*if (!EditedPHead.Email.Equals(pharmacyHead.Email) && !user.Email.Equals(pharmacyHead.Email))
+            {
                 EditedPHead.Email = pharmacyHead.Email;
+                user.Email = pharmacyHead.Email;
+            }*/
 
-            if (!EditedPHead.Name.Equals(pharmacyHead.Name))
+            if (!EditedPHead.Name.Equals(pharmacyHead.Name) || !user.Name.Equals(pharmacyHead.Name))
+            {
                 EditedPHead.Name = pharmacyHead.Name;
+                user.Name = pharmacyHead.Name;
+            }
 
-            if (!EditedPHead.Password.Equals(pharmacyHead.Password))
+            if (!EditedPHead.Password.Equals(pharmacyHead.Password) || !user.Password.Equals(pharmacyHead.Password))
+            {
                 EditedPHead.Password = pharmacyHead.Password;
-
-            if (!EditedPHead.Pharmacies.Equals(pharmacyHead.Pharmacies))
-                EditedPHead.Pharmacies = pharmacyHead.Pharmacies;
-
-            if (!EditedPHead.Medicines.Equals(pharmacyHead.Medicines))
-                EditedPHead.Medicines = pharmacyHead.Medicines;
-
-            await _context.SaveChangesAsync();
+                user.Password = pharmacyHead.Password;
+            }
+            foreach(var pharmacy in pharmacyHead.Pharmacies)
+            {
+                if (!EditedPHead.Pharmacies.Contains(pharmacy))
+                {
+                    pharmacy.PheadId = EditedPHead.Id;
+                    pharmacy.PharmacyHead = EditedPHead;
+                    EditedPHead.Pharmacies.Add(pharmacy);
+                }
+            }
+            _context.Entry(EditedPHead).State = EntityState.Modified;
+            
+            _context.SaveChanges();
         }
         public async Task ClaimPharmacy(RequestPharmacyHead pharmacy)
         {
+            var phead = _context.PharmacyHeads.Where(x => x.Email.Equals(pharmacy.Head.Email)).FirstOrDefault();
+            pharmacy.Head = phead;
             await _context.PHRequests.AddAsync(pharmacy);
             await _context.SaveChangesAsync();
         }
@@ -131,7 +146,7 @@ namespace FarmatikoData.FarmatikoRepo
 
         public PharmacyHead GetPharmacyHead(string head)
         {
-            var phead = _context.PharmacyHeads.Where(x => x.Email.Equals(head)).FirstOrDefault();
+            var phead = _context.PharmacyHeads.Where(x => x.Email.Equals(head)).Include(x => x.Pharmacies).FirstOrDefault();
             return phead;
         }
 

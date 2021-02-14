@@ -1,9 +1,29 @@
-<h3>Повеќе инфо</h3>
+<h3>Повеќе информации</h3>
+<table class="table table-striped">
+    <tbody>
+        <tr>
+            <td>Име</td>
+            <td>{{pharmacy?.name}}</td>
+        </tr>
+        <tr>
+            <td>Општина</td>
+            <td>{{pharmacy?.location}}</td>
+        </tr>
+        <tr>
+            <td>Адреса</td>
+            <td>{{pharmacy?.address}}</td>
+        </tr>
+        <tr>
+            <td>Работи 24/7</td>
+            <td><div *ngIf="pharmacy.workAllTime == true">Да</div><div *ngIf="pharmacy.workAllTime != true">Не</div></td>
+        </tr>
+        <tr>
+            <td>Компанија</td>
+            <td>{{pharmacy?.headName}}</td>
+        </tr>
+    </tbody>
+</table>
+
+<div style="height: 200px;" leaflet [leafletOptions]="options" *ngIf="mapShown"></div>
 <br>
-<p>ИД: {{pharmacy.id}}</p>
-<p>Име: {{pharmacy.name}}</p>
-<p>Општина: {{pharmacy.location}}</p>
-<p>Адреса: {{pharmacy.address}}</p>
-<p>Работи 24/7: {{pharmacy.workAllTime}}</p>
-<br>
-<p><a (click)="close()">Затвори</a></p>
+<p><button mat-button color="primary" (click)="close()">Затвори</button></p>

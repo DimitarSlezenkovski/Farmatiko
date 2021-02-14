@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using FarmatikoData.DTOs;
 using FarmatikoData.Models;
 using FarmatikoServices.FarmatikoServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -24,9 +25,8 @@ namespace Farmatiko.Controllers
         {
             //_JSONservice.DownloadPharmaciesExcel();
             //_JSONservice.GetProcessedHealthcareWorkersFromJSON();
-            //_JSONservice.GetProcessedHealthFacilitiesFromJSON();
-            //_JSONservice.GetProcessedMedicinesFromJSON();
-            //_JSONservice.GetProcessedPandemicsFromJSONApi();
+            //await _JSONservice.GetProcessedHealthFacilitiesFromJSON();
+            //await _JSONservice.GetProcessedMedicinesFromJSON();
         }
         [HttpGet]
         [Route("api/workers")]
@@ -76,13 +76,13 @@ namespace Farmatiko.Controllers
         //Get
         [HttpGet]
         [Route("api/medicines")]
-        public async Task<IEnumerable<Medicine>> GetMedicines()
+        public async Task<IEnumerable<MedicineDTO>> GetMedicines()
         {
             return await _service.GetMedicines();
         }
         [HttpGet]
         [Route("api/medicines/search/{query}")]
-        public async Task<IEnumerable<Medicine>> SearchMedicines([FromRoute] string query)
+        public async Task<IEnumerable<MedicineDTO>> SearchMedicines([FromRoute] string query)
         {
             return await _service.SearchMedicines(query);
         }
@@ -95,21 +95,21 @@ namespace Farmatiko.Controllers
         //Pandemic
         [HttpGet]
         [Route("api/pandemic")]
-        public async Task<Pandemic> GetPandemic()
+        public Pandemic GetPandemic()
         {
-            return await _service.GetPandemic();
+            return _service.GetPandemic();
         }
         //Pharmacy
         //GET
         [HttpGet]
         [Route("api/pharmacy")]
-        public async Task<IEnumerable<Pharmacy>> GetPharmacies()
+        public async Task<IEnumerable<PharmacyDTO>> GetPharmacies()
         {
             return await _service.GetPharmacies();
         }
         [HttpGet]
         [Route("api/pharmacy/search/{Query}")]
-        public async Task<IEnumerable<Pharmacy>> SearchPharmacies([FromRoute] string Query)
+        public async Task<IEnumerable<PharmacyDTO>> SearchPharmacies([FromRoute] string Query)
         {
             return await _service.SearchPharmacies(Query);
         }

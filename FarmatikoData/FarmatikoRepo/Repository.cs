@@ -18,7 +18,14 @@ namespace FarmatikoData.FarmatikoRepo
         //GET
         public async Task<IEnumerable<HealthcareWorker>> GetAllWorkers()
         {
-            var Workers = await _context.HealthcareWorkers.Take(5).ToListAsync();
+            var Workers = await _context.HealthcareWorkers.Select(x => new HealthcareWorker 
+            { 
+                Id = x.Id,
+                Name = x.Name,
+                Branch = x.Branch,
+                Facility = x.Facility,
+                Title = x.Title
+            }).Take(5).ToListAsync();
             return Workers;
         }
 
@@ -53,7 +60,7 @@ namespace FarmatikoData.FarmatikoRepo
                 Price = x.Price,
                 Packaging = x.Packaging
 
-            }).Take(3).ToListAsync();
+            }).Take(5).ToListAsync();
             return Medicines;
         }
 
@@ -62,10 +69,17 @@ namespace FarmatikoData.FarmatikoRepo
             var Pandemic = await _context.Pandemics.FirstOrDefaultAsync();
             return Pandemic;
         }
-
-        public async Task<IEnumerable<Pharmacy>> GetPharmacies()
+        public async Task<List<Pharmacy>> GetPharmacies()
         {
-            var Pharmacies = await _context.Pharmacies.Take(5).ToListAsync();
+            var Pharmacies = await _context.Pharmacies.Select(x => new Pharmacy 
+            {
+                Name = x.Name,
+                Location = x.Location,
+                Address = x.Address,
+                WorkAllTime = x.WorkAllTime,
+                PheadId = x.PheadId,
+                PharmacyHead = x.PharmacyHead
+            }).Take(5).ToListAsync();
             return Pharmacies;
         }
 
@@ -84,7 +98,9 @@ namespace FarmatikoData.FarmatikoRepo
         public async Task<IEnumerable<HealthFacility>> SearchFacilities(string query)
         {
             var SearchQuery = await _context.HealthFacilities
-            .Where(x => x.Name.Contains(query))
+            .Where(x => x.Name.ToLower().Contains(query.ToLower())
+            || x.Municipality.ToLower().Contains(query.ToLower())
+            || x.Type.ToLower().Contains(query.ToLower())).Take(5)
             .OrderBy(x => x.Name).ToListAsync();
 
             return SearchQuery;
@@ -93,7 +109,10 @@ namespace FarmatikoData.FarmatikoRepo
         public async Task<IEnumerable<Medicine>> SearchMedicines(string query)
         {
             var SearchQuery = await _context.Medicines
-            .Where(x => x.Name.Contains(query))
+            .Where(x => x.Name.ToLower().Contains(query.ToLower()) 
+            || x.Form.ToLower().Contains(query.ToLower()) 
+            || x.Strength.ToLower().Contains(query.ToLower()) 
+            || x.Packaging.ToLower().Contains(query.ToLower())).Take(20)
             .OrderBy(x => x.Name).ToListAsync();
 
             return SearchQuery;
@@ -101,8 +120,9 @@ namespace FarmatikoData.FarmatikoRepo
 
         public async Task<IEnumerable<Pharmacy>> SearchPharmacies(string query)
         {
-            var SearchQuery = await _context.Pharmacies.Take(5)
-            .Where(x => x.Name.Contains(query))
+            var SearchQuery = await _context.Pharmacies
+            .Where(x => x.Name.ToLower().Contains(query.ToLower())
+            || x.PharmacyHead.Name.ToLower().Contains(query.ToLower())).Take(5)
             .OrderBy(x => x.Name).ToListAsync();
 
             return SearchQuery;
@@ -110,8 +130,9 @@ namespace FarmatikoData.FarmatikoRepo
 
         public async Task<IEnumerable<HealthcareWorker>> SearchWorkers(string query)
         {
-            var SearchQuery = await _context.HealthcareWorkers.Take(5)
-            .Where(x => x.Name.Contains(query))
+            var SearchQuery = await _context.HealthcareWorkers.Include(x => x.Facility)
+            .Where(x => x.Name.ToLower().Contains(query.ToLower())
+            || x.Facility.Name.ToLower().Contains(query.ToLower())).Take(20)
             .OrderBy(x => x.Name).ToListAsync();
 
             return SearchQuery;
@@ -138,14 +159,42 @@ namespace FarmatikoData.FarmatikoRepo
 
         public async Task AddPharmacy(Pharmacy pharmacy)
         {
-            await _context.Pharmacies.AddAsync(pharmacy);
-            _context.SaveChanges();
+            pharmacy.Id = 0;
+            if (pharmacy.Id == 0)
+            {
+                var phars = _context.Pharmacies.Select(x => new Pharmacy
+                {
+                    Name = x.Name,
+                    Location = x.Location,
+                    Address = x.Address
+                }).ToList();
+                var pharms = phars.Where(x => x.Name.Equals(pharmacy.Name) && x.Location.Equals(pharmacy.Location) && x.Address.Equals(pharmacy.Address)).ToList();
+                if (pharms is null || pharms.Count() == 0)
+                {
+                    await _context.Pharmacies.AddAsync(pharmacy);
+                    _context.SaveChanges();
+                }
+                
+            }
         }
 
         public async Task AddPharmacyHead(PharmacyHead pharmacyHead)
         {
-            await _context.PharmacyHeads.AddAsync(pharmacyHead);
-            _context.SaveChanges();
+            pharmacyHead.Id = 0;
+            if (pharmacyHead.Id == 0)
+            {
+                var pheads = await _context.PharmacyHeads.Select(x => new PharmacyHead 
+                {
+                    Name = x.Name,
+                    Email = x.Email
+                }).ToListAsync();
+                var pheadusr = pheads.Where(x => x.Email.Equals(pharmacyHead.Email)).ToList();
+                if (pheadusr == null || pheadusr.Count() == 0)
+                {
+                    await _context.PharmacyHeads.AddAsync(pharmacyHead);
+                    await _context.SaveChangesAsync();
+                }
+            }
         }
 
         public async Task AddMedicines(Medicine medicine)
@@ -220,9 +269,15 @@ namespace FarmatikoData.FarmatikoRepo
 
         public async Task RemovePharmacyHead(int Id)
         {
-            var PHead = await _context.PharmacyHeads.Where(x => x.Id == Id).FirstOrDefaultAsync();
-            PHead.DeletedOn = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
+            var PHead = await _context.PharmacyHeads.Where(x => x.Id == Id).Include(x => x.Pharmacies).Include(x => x.Medicines).FirstOrDefaultAsync();
+            var user = await _context.Users.Where(x => x.Email.Equals(PHead.Email)).FirstOrDefaultAsync();
+            var PHreqs = await _context.PHRequests.Where(x => x.Head.Id.Equals(PHead.Id)).FirstOrDefaultAsync();
+            PHead.Pharmacies.Select(x => x.PheadId = null);
+            PHead.Pharmacies.Select(x => x.PharmacyHead = null);
+            _context.PHRequests.Remove(PHreqs);
+            _context.PharmacyHeads.Remove(PHead);
+            _context.Users.Remove(user);
+            _context.SaveChanges();
         }
 
         public IDictionary<string, User> GetUsers()
@@ -269,11 +324,56 @@ namespace FarmatikoData.FarmatikoRepo
             var phmeds = _context.PharmacyHeadMedicines.Where(x => x.PheadId == head.Id).Include(x => x.Medicine).ToList();
             return phmeds;
         }
-
-        public async Task AddUser(User user)
+        
+        /*public async Task<bool> AddUser(User user)
         {
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            if (user.Id == 0)
+            {
+                var users = await _context.Users.Select(x => new User
+                {
+                    Name = x.Name,
+                    Email = x.Email,
+                    Password = x.Password,
+                    UserRole = x.UserRole
+                }).ToListAsync();
+                var usr = users.Where(x => x.Email.Equals(user.Email)).ToList();
+                if (usr != null && usr.Count() > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    await _context.Users.AddAsync(user);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            return false;
+        }*/
+
+        public async Task<List<PharmacyHeadMedicine>> GetAllPHMedicines()
+        {
+            var list = await _context.PharmacyHeadMedicines.Select(x => new PharmacyHeadMedicine
+            {
+                PheadId = x.PheadId,
+                Head = x.Head,
+                MedicineId = x.MedicineId,
+                Medicine = x.Medicine
+            }
+            ).ToListAsync();
+            return list;
+        }
+
+        public ICollection<PharmacyHeadMedicine> GetPHMedicines()
+        {
+            var meds = _context.PharmacyHeadMedicines.Select(x => new PharmacyHeadMedicine
+            {
+                PheadId = x.PheadId,
+                Head = x.Head,
+                MedicineId = x.MedicineId,
+                Medicine = x.Medicine
+            }).ToList();
+            return meds;
         }
     }
 }

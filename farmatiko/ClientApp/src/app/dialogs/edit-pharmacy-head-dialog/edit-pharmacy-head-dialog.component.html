@@ -2,7 +2,7 @@
   <form (ngSubmit)="save()" #headForm="ngForm" class="editForm" novalidate>
     <div class="form-group">
       <label>ИД</label>
-      <input type="text" class="form-control" name="id" [(ngModel)]="head.id" #id="ngModel" required>
+      <input type="text" class="form-control" name="id" [(ngModel)]="head.id" #id="ngModel" required disabled>
       <div class="alert alert-danger">ID is required</div>
     </div>
     <div class="form-group">

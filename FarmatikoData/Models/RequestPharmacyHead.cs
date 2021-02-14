@@ -1,4 +1,5 @@
 ﻿using FarmatikoData.Base;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,11 +13,11 @@ namespace FarmatikoData.Models
         public RequestPharmacyHead()
         {
         }
-        [Required]
-        [JsonPropertyName("PharmacyHead")]
+        
+        [JsonProperty("PharmacyHead")]
         public PharmacyHead Head { get; set; }
-        [Required]
-        [JsonPropertyName("Pharmacy")]
+        
+        [JsonProperty("Pharmacy")]
         public Pharmacy Pharmacy { get; set; }
 
     }

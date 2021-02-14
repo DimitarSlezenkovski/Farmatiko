@@ -43,10 +43,10 @@
       </thead>
       <tbody>
         <tr *ngFor="let pharmacies of head.Pharmacy">
-          <td>{{pharmacies.name}}</td>
-          <td>{{pharmacies.location}}</td>
-          <td>{{pharmacies.address}}</td>
-          <td>{{pharmacies.workAllTime}}</td>
+          <td (click)="openPharmacyDialog(pharmacies)">{{pharmacies.name}}</td>
+          <td (click)="openPharmacyDialog(pharmacies)">{{pharmacies.location}}</td>
+          <td (click)="openPharmacyDialog(pharmacies)">{{pharmacies.address}}</td>
+          <td (click)="openPharmacyDialog(pharmacies)">{{pharmacies.workAllTime}}</td>
           <td><a (click)="openEditPharmacyDialog(pharmacies)">Edit</a></td>
         </tr>
       </tbody>
@@ -71,12 +71,12 @@
       	</tr>
       </thead>
       <tbody>
-      	<tr *ngFor="let pharmacy of pharmacies">
-      	  <td><a (click)="openPharmacyDialog(pharmacy)">{{ pharmacy.name }}</a></td>
-      	  <td>{{ pharmacy.location }}</td>
-      	  <td>{{ pharmacy.address }}</td>
-          <td>{{ pharmacy.workAllTime }}</td>
-          <td><a (click)="claimPharmacy(pharmacy)">Claim</a></td>
+      	<tr *ngFor="let pharmacy of filteredPharmacies">
+      	  <td (click)="openPharmacyDialog(pharmacy)">{{ pharmacy.name }}</td>
+      	  <td (click)="openPharmacyDialog(pharmacy)">{{ pharmacy.location }}</td>
+      	  <td (click)="openPharmacyDialog(pharmacy)">{{ pharmacy.address }}</td>
+          <td (click)="openPharmacyDialog(pharmacy)">{{ pharmacy.workAllTime }}</td>
+          <td><a (click)="claimPharmacy(pharmacy)" *ngIf="!pharmacy.headName">Claim</a> <span *ngIf="pharmacy.headName">Already claimed</span></td>
       	</tr>
     </tbody>
   </table>
@@ -113,19 +113,19 @@
         </thead>
         <tbody>
           <tr *ngFor="let medicine of filteredMedicines">
-            <td *ngIf="!medicinesEditMode"><a (click)="openMedicineDialog(medicine)">{{ medicine.name }}</a></td>
+            <td *ngIf="!medicinesEditMode" (click)="openMedicineDialog(medicine)">{{ medicine.name }}</td>
             <td *ngIf="medicinesEditMode"><mat-form-field appearance="fill"><input matInput [(ngModel)]="medicine.name" name="medname"></mat-form-field></td>
-            <td *ngIf="!medicinesEditMode">{{ medicine.strength }}</td>
+            <td *ngIf="!medicinesEditMode" (click)="openMedicineDialog(medicine)">{{ medicine.strength }}</td>
             <td *ngIf="medicinesEditMode"><mat-form-field appearance="fill"><input matInput [(ngModel)]="medicine.strength" name="medstr"></mat-form-field></td>
-            <td *ngIf="!medicinesEditMode">{{ medicine.form }}</td>
+            <td *ngIf="!medicinesEditMode" (click)="openMedicineDialog(medicine)">{{ medicine.form }}</td>
             <td *ngIf="medicinesEditMode"><mat-form-field appearance="fill"><input matInput [(ngModel)]="medicine.form" name="medform"></mat-form-field></td>
-            <td *ngIf="!medicinesEditMode">{{ medicine.wayOfIssuing }}</td>
+            <td *ngIf="!medicinesEditMode" (click)="openMedicineDialog(medicine)">{{ medicine.wayOfIssuing }}</td>
             <td *ngIf="medicinesEditMode"><mat-form-field appearance="fill"><input matInput [(ngModel)]="medicine.wayOfIssuing" name="medwayOfIssuing"></mat-form-field></td>
-            <td *ngIf="!medicinesEditMode">{{ medicine.manufacturer }}</td>
+            <td *ngIf="!medicinesEditMode" (click)="openMedicineDialog(medicine)">{{ medicine.manufacturer }}</td>
             <td *ngIf="medicinesEditMode"><mat-form-field appearance="fill"><input matInput [(ngModel)]="medicine.manufacturer" name="medmanufacturer"></mat-form-field></td>
-            <td *ngIf="!medicinesEditMode">{{ medicine.price }}</td>
+            <td *ngIf="!medicinesEditMode" (click)="openMedicineDialog(medicine)">{{ medicine.price }}</td>
             <td *ngIf="medicinesEditMode"><mat-form-field appearance="fill"><input matInput [(ngModel)]="medicine.price" name="medprice"></mat-form-field></td>
-            <td *ngIf="!medicinesEditMode">{{ medicine.packaging }}</td>
+            <td *ngIf="!medicinesEditMode" (click)="openMedicineDialog(medicine)">{{ medicine.packaging }}</td>
             <td *ngIf="medicinesEditMode"><mat-form-field appearance="fill"><input matInput [(ngModel)]="medicine.packaging" name="medpackaging"></mat-form-field></td>
             <td>
               <button mat-mini-fab color="warn" aria-label="Delete medicine" (click)="deleteMedicine(medicine)">

@@ -55,7 +55,7 @@
               <tbody>
                 <tr *ngFor="let head of heads">
                   <td><a (click)="openPharmacyHeadDialog(head)">{{head.Name}}</a> | {{head.Email}}</td>
-                  <td><a (click)="deletePharmacyHead(head)">Delete</a> | <a (click)="openEditPharmacyHeadDialog(head)">Change</a></td>
+                  <td><a (click)="deletePharmacyHead(head)" *ngIf="head.Name !== 'Admin'">Delete</a><span *ngIf="head.Name == 'Admin'">Can't delete Admin</span> | <a (click)="openEditPharmacyHeadDialog(head)">Change</a></td>
                 </tr>
               </tbody>
             </table>

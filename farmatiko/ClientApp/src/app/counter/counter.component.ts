@@ -4,6 +4,8 @@ import { DataService } from '../shared/data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FacilityDialogComponent } from '../dialogs/facility-dialog/facility-dialog.component';
 import { WorkerDialogComponent } from '../dialogs/worker-dialog/worker-dialog.component';
+import { latLng, LatLng, tileLayer, marker, icon } from 'leaflet';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-counter-component',
@@ -15,8 +17,19 @@ export class CounterComponent implements OnInit {
   public workers: IHealthcareWorkers[] = [];
   public filteredFacilities: IHealthFacilities[] = [];
   public filteredWorkers: IHealthcareWorkers[] = [];
-
-  constructor(private dataService: DataService, private dialog: MatDialog) {
+  public lat;
+  public lng;
+  clicked = false;
+  showMap: boolean = false;
+  options = {
+    layers: [
+      tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' })
+    ],
+    zoom: 8,
+    center: latLng(41.61807, 21.74348)
+  }
+  
+  constructor(private dataService: DataService, private dialog: MatDialog, private http: HttpClient) {
     
   }
 
@@ -26,7 +39,10 @@ export class CounterComponent implements OnInit {
           this.facilities = this.filteredFacilities = facility;
         },
         (err: any) => console.log(err),
-        () => console.log('Facility data retrieved!'));
+        () => {
+          this.appendFacilityMarkers(this.facilities)
+          console.log('Facility data retrieved!');
+        });
 
     this.dataService.getWorkers()
         .subscribe((worker: IHealthcareWorkers[]) => {
@@ -34,6 +50,52 @@ export class CounterComponent implements OnInit {
         },
         (err: any) => console.log(err),
         () => console.log('Facility data retrieved!'));
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        if (position) {
+          this.lat = position.coords.latitude;
+          this.lng = position.coords.longitude;
+          let layer = marker([ this.lat, this.lng ], {
+            icon: icon({
+              iconSize: [ 25, 41 ],
+              iconAnchor: [ 13, 41 ],
+              iconUrl: 'assets/home-icon.png'
+            })
+          }).bindPopup("Вашата локација");
+          this.options.layers.push(layer);
+        }
+      });
+    }
+  }
+
+  appendFacilityMarkers(facils: IHealthFacilities[]) {
+    this.options.layers = [];
+    this.options.layers.push(tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}));
+    if(this.lat && this.lng) {
+      this.options.layers.push(marker([ this.lat, this.lng ], {
+        icon: icon({
+          iconSize: [ 25, 41 ],
+          iconAnchor: [ 13, 41 ],
+          iconUrl: 'assets/home-icon.png'
+        })
+      }).bindPopup("Вашата локација"));
+    }
+    facils.forEach((facil) => {
+      this.http.get<any>('https://jankuloski.xyz:8080/https://nominatim.openstreetmap.org/search/?country=Macedonia&city='+facil.municipality+'&street='+facil.address+'&format=json').subscribe(obj => {
+        console.log(obj);  
+        if(obj.length) {
+            let layer = marker([ obj[0]?.lat, obj[0]?.lon ], {
+              icon: icon({
+                iconSize: [ 25, 41 ],
+                iconAnchor: [ 13, 41 ],
+                iconUrl: 'assets/hospital-icon.png'
+              })
+            }).bindPopup(facil.name);
+            this.options.layers.push(layer);
+          }
+        }, error => console.error(error));
+    });
   }
 
   applyFilterFacilities(filterValue: string) {
@@ -44,10 +106,22 @@ export class CounterComponent implements OnInit {
             this.filteredFacilities = facility;
           },
           (err: any) => console.log(err),
-          () => console.log('Facility data retrieved!'));
+          () => {
+            this.appendFacilityMarkers(this.filteredFacilities);
+            if(this.showMap) {
+              this.showMap = false;
+              setTimeout(() => this.showMap = true, 300);
+            }
+            console.log('Facility data retrieved!');
+          });
     }
     else {
       this.filteredFacilities = this.facilities;
+      this.appendFacilityMarkers(this.facilities);
+      if(this.showMap) {
+        this.showMap = false;
+        setTimeout(() => this.showMap = true, 300);
+      }
     }
   }
 
@@ -79,4 +153,14 @@ export class CounterComponent implements OnInit {
       data: worker
     });
   }
+  
+  toggleMap() {
+    this.showMap = !this.showMap;
+  }
+
+  refreshMap() {
+    this.showMap = false;
+    setTimeout(() => this.showMap = true, 300);
+  }
+
 }

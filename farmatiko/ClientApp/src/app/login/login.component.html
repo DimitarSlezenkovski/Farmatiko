@@ -1,6 +1,11 @@
 <div class="wrapper">
 <mat-card>
-<mat-card-header><h2>Најава</h2></mat-card-header>
+<mat-card-header><h2>Најава 
+  <div class="aligner">
+  <button mat-icon-button color="primary" [routerLink]="['/']">
+    Почетна <mat-icon>home</mat-icon>
+  </button>
+</div></h2></mat-card-header>
 <mat-card-content>
 <form [formGroup]="loginForm" novalidate>
   <div class="example-container">
@@ -21,4 +26,18 @@
 </form>
 </mat-card-content>
 </mat-card>
-</div>
+<br>
+  <mat-card>
+  <mat-card-header><h2>Регистрација 
+    <div class="aligner">
+    <button mat-icon-button color="accent" (click)="expandRegistration()">
+      <mat-icon>local_hospital</mat-icon>
+    </button>
+  </div></h2></mat-card-header>
+  <mat-card-content *ngIf="expanded">
+    <div class="content">
+      Модераторски профил може да има само еден<br> претставник од компанија што поседува деловен објект <br> - Аптека. За регистрација на профилот, потребно е <br> компанијата да приложи соодветен доказ со испраќање<br> на мејл до нашата е-пошта: <a href="mailto:admin@farmatiko.tk">admin@farmatiko.tk</a>
+    </div>
+  </mat-card-content>
+  </mat-card>
+  </div>

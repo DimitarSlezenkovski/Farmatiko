@@ -11,6 +11,6 @@ namespace FarmatikoServices.FarmatikoServiceInterfaces
     {
         Task<IEnumerable<PharmacyHead>> GetPharmacyHeads();
         Task<IEnumerable<RequestPharmacyHead>> GetClaimingRequests();
-        bool RejectRequest(int Id);
+        bool RejectRequest(RequestPharmacyHead req);
     }
 }

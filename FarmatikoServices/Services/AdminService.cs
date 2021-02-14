@@ -35,11 +35,11 @@ namespace FarmatikoServices.Services
             throw new Exception("No data is found.");
         }
 
-        public bool RejectRequest(int Id)
+        public bool RejectRequest(RequestPharmacyHead req)
         {
-            if (Id >= 0)
+            if (req != null)
             {
-                _adminRepo.RemoveClaimRequest(Id);
+                _adminRepo.RemoveClaimRequest(req);
                 return true;
             }
             return false;

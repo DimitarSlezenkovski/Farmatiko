@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using FarmatikoData.Base;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace FarmatikoData.Models
 {
@@ -11,12 +12,16 @@ namespace FarmatikoData.Models
     {
         public Pharmacy() { }
         [Required]
+        [JsonProperty("name")]
         public string Name { get; set; }
         [Required]
+        [JsonProperty("location")]
         public string Location { get; set; }
         [Required]
+        [JsonProperty("address")]
         public string Address { get; set; }
         [Required]
+        [JsonProperty("workAllTime")]
         public bool WorkAllTime { get; set; }
         public Pharmacy(string Name, string Location, string Address, bool WorkAllTime)
         {
@@ -25,7 +30,7 @@ namespace FarmatikoData.Models
             this.Address = Address;
             this.WorkAllTime = WorkAllTime;
         }
-        public int PheadId { get; set; }
+        public int? PheadId { get; set; }
         public PharmacyHead PharmacyHead { get; set; }
     }
 }

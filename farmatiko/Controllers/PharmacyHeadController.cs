@@ -29,7 +29,7 @@ namespace Farmatiko.Controllers
         }
         //POST
         
-        [HttpPut]
+        [HttpPost]
         [Route("api/pharmacyhead/update")]
         public async Task<IActionResult> UpdatePharmacyHead([FromBody] PharmacyHeadDto pharmacyHead)
         {
@@ -43,20 +43,20 @@ namespace Farmatiko.Controllers
             bool Success = await _PHService.ClaimPharmacy(pharmacy);
             return Ok(Success);
         }
-        [HttpDelete]
+       /* [HttpDelete]
         [Route("api/pharmacyhead/delete/{Id}")]
         public async Task<IActionResult> Remove([FromRoute] int Id)
         {
             bool Success = await _PHService.Remove(Id);
             return Ok(Success);
-        }
-        [HttpPost]
+        }*/
+       /* [HttpPost]
         [Route("api/pharmacyhead/requests/{Id}")]
         public async Task<IActionResult> RemoveClaimingRequest([FromRoute] int Id)
         {
             bool Success = await _PHService.RemoveClaimingRequest(Id);
             return Ok(Success);
-        }
+        }*/
 
     }
 }

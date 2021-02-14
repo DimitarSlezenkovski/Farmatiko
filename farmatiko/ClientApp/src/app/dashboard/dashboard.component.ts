@@ -39,10 +39,11 @@ export class DashboardComponent implements OnInit {
         () => console.log('User data retrieved'));
     this.dataService.getPharmacies()
         .subscribe((pharmacy: IPharmacy[]) => {
-          this.pharmacies = pharmacy;
-          this.head.Pharmacy.forEach((pharma) => {
-            this.filteredPharmacies = this.pharmacies = this.pharmacies.filter(x => x == pharma);
-          });
+          this.pharmacies = this.filteredPharmacies = pharmacy;
+          // Iskluceno filtriranje na farmacies (Star metod)
+          // this.head.Pharmacy.forEach((pharma) => {
+          //   this.filteredPharmacies = this.pharmacies = this.pharmacies.filter(x => x == pharma);
+          // });
         },
         (err: any) => console.log(err),
         () => console.log('Pharmacy data retrieved'));
@@ -58,10 +59,7 @@ export class DashboardComponent implements OnInit {
         this.dataService.claimPharmacy(this.request)
             .subscribe((req) => {
               if(req) {
-                this.openSnackBar("Claiming request sent!", "OK");
-              }
-              else {
-                this.openSnackBar("Unable to send a request", "Try again");
+                this.openSnackBar("Request sent!", "OK");
               }
             },
             (err: any) => console.log(err),
@@ -76,10 +74,7 @@ export class DashboardComponent implements OnInit {
         this.dataService.claimPharmacy(this.request)
             .subscribe((req) => {
               if(req) {
-                this.openSnackBar("Claiming request sent!", "OK");
-              }
-              else {
-                this.openSnackBar("Unable to send a request", "Try again");
+                this.openSnackBar("Request sent!", "OK");
               }
             },
             (err: any) => console.log(err),
@@ -96,16 +91,14 @@ export class DashboardComponent implements OnInit {
   
   saveDeletedMedicines() {
     this.dataService.updatePharmacyHead(this.head)
-      .subscribe((hd: IPharmacyHead) => {
-        if(hd) {
-          this.openSnackBar("Success! Medicine deleted", "OK");
+      .subscribe(() => {
+          this.openSnackBar("Success!", "OK");
           this.editedMedicine = false;
-        }
-        else {
-          this.openSnackBar("Unable to delete Medicine", "Try again");
-        }
       },
-      (err: any) => console.log(err),
+      (err: any) => {
+        console.log(err);
+        this.openSnackBar("Failed!", "Try again");
+      },
       () => console.log('Update sent!'));
   }
 
@@ -130,10 +123,7 @@ export class DashboardComponent implements OnInit {
         if(this.editedMedicine == false) {
           this.editedMedicine = true;
         }
-        this.openSnackBar("Success! Medicine added, please save changes now", "OK");
-      }
-      else {
-        this.openSnackBar("Failed! Please try again", "OK");
+        this.openSnackBar("Success!", "OK");
       }
     }, () => this.openSnackBar("Failed! Please try again", "OK"));
   }
@@ -146,17 +136,19 @@ export class DashboardComponent implements OnInit {
     dialogRef.afterClosed().subscribe((listMedicines: IMedicine[]) => {
       if(listMedicines){
         listMedicines.forEach((medicine) => {
-          this.head.PharmacyMedicines = this.head.PharmacyMedicines.filter(x => x != medicine);
+          if(this.head.PharmacyMedicines) {
+            this.head.PharmacyMedicines = this.head.PharmacyMedicines.filter(x => x != medicine);
+          }
+          else {
+            this.head.PharmacyMedicines = [];
+          }
           this.head.PharmacyMedicines.push(medicine);
           this.filteredMedicines = this.head.PharmacyMedicines;
         });
         if(this.editedMedicine == false) {
           this.editedMedicine = true;
         }
-        this.openSnackBar("Success! Medicines added, please save changes now", "OK");
-      }
-      else {
-        this.openSnackBar("Failed! Please try again", "OK");
+        this.openSnackBar("Success!", "OK");
       }
     }, () => this.openSnackBar("Failed! Please try again", "OK"));
   }
@@ -174,9 +166,9 @@ export class DashboardComponent implements OnInit {
       this.dataService.searchPharmacies(filterValue)
           .subscribe((pharmacy: IPharmacy[]) => {
             this.filteredPharmacies = pharmacy;
-            this.head.Pharmacy.forEach((pharma) => {
-              this.filteredPharmacies = this.filteredPharmacies.filter(x => x == pharma);
-            });
+            // this.head.Pharmacy.forEach((pharma) => {
+            //   this.filteredPharmacies = this.filteredPharmacies.filter(x => x == pharma);
+            // });
           },
           (err: any) => console.log(err),
           () => console.log('Pharmacy data retrieved')); 
@@ -208,15 +200,10 @@ export class DashboardComponent implements OnInit {
         this.head.Pharmacy = this.head.Pharmacy.filter(x => x !== pharmacy);
         this.head.Pharmacy.push(editedPharmacy);
         this.dataService.updatePharmacyHead(this.head)
-            .subscribe((hd: IPharmacyHead) => {
-              if(hd) {
-                this.openSnackBar("Success! Pharmacy edited", "OK").onAction().subscribe(() => {
+            .subscribe((hd) => {
+                this.openSnackBar("Success!", "OK").onAction().subscribe(() => {
                   window.location.reload();
                 });
-              }
-              else {
-                this.openSnackBar("Pharmacy edit failed", "Try again");
-              }
             },
             (err: any) => console.log(err),
             () => console.log('PharmacyHead data updated'));

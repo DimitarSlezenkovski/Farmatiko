@@ -11,6 +11,6 @@ namespace FarmatikoData.FarmatikoRepoInterfaces
     {
         Task<IEnumerable<RequestPharmacyHead>> GetClaimingRequests();
         Task<IEnumerable<PharmacyHead>> GetPharmacyHeads();
-        void RemoveClaimRequest(int Id);
+        void RemoveClaimRequest(RequestPharmacyHead Id);
     }
 }

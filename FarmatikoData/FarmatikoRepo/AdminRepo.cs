@@ -19,7 +19,11 @@ namespace FarmatikoData.FarmatikoRepo
 
         public async Task<IEnumerable<RequestPharmacyHead>> GetClaimingRequests()
         {
-            var reqs = await _context.PHRequests.OrderBy(x => x.Head.Name).ToListAsync();
+            var reqs = await _context.PHRequests.Select(x => new RequestPharmacyHead 
+            {
+                Head = x.Head,
+                Pharmacy = x.Pharmacy
+            }).OrderBy(x => x.Head.Name).ToListAsync();
             return reqs;
         }
 
@@ -34,11 +38,12 @@ namespace FarmatikoData.FarmatikoRepo
             return PHeads;
         }
         //POST
-        public async void RemoveClaimRequest(int Id)
+        public void RemoveClaimRequest(RequestPharmacyHead request)
         {
-            var req = _context.PHRequests.Where(x => x.Id == Id).FirstOrDefault();
+            var req = _context.PHRequests.Select(x => new RequestPharmacyHead { Head = x.Head, Pharmacy = x.Pharmacy, Id = x.Id})
+                .Where(x => x.Head.Email.Equals(request.Head.Email)).FirstOrDefault();
             _context.PHRequests.Remove(req);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
     }
 }
