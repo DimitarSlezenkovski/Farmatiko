@@ -121,10 +121,10 @@ namespace Farmatiko
                 o.MemoryBufferThreshold = int.MaxValue;
             });*/
 
+            services.AddScoped<UpdateDataJob>();
             services.AddSingleton<IJobFactory, SingletonUpdateDataJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
 
-            services.AddTransient<UpdateDataJob>();
             services.AddSingleton(new JobSchedule(
             jobType: typeof(UpdateDataJob),
             cronExpression: "0/30 * * * * ?"));

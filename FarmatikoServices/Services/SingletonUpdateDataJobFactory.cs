@@ -17,7 +17,11 @@ namespace FarmatikoServices.Services
 
         public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
-            return _serviceProvider.GetRequiredService(bundle.JobDetail.JobType) as IJob;
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                return scope.ServiceProvider.GetRequiredService(bundle.JobDetail.JobType) as IJob;
+            }
+            
         }
 
         public void ReturnJob(IJob job) { }
